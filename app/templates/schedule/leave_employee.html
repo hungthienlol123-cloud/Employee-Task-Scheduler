@@ -1,0 +1,447 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Xin nghỉ - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+GIẤY PHÉP XIN NGHỈ
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="leave-layout">
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <form
+        method="post"
+        class="leave-form-card"
+    >
+
+
+        <div class="leave-form-heading">
+
+            <div class="leave-icon">
+
+                <i class="bi bi-calendar2-x-fill"></i>
+
+            </div>
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    LEAVE REQUEST
+                </span>
+
+                <h3>
+                    Tạo đơn xin nghỉ
+                </h3>
+
+                <p>
+                    Gửi yêu cầu tới Admin
+                    để phê duyệt.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-3">
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Từ ngày
+                </label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    name="start_date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Đến ngày
+                </label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    name="end_date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="col-12">
+
+                <label class="form-label">
+                    Loại nghỉ
+                </label>
+
+                <select
+                    class="form-select"
+                    name="leave_type"
+                >
+
+                    <option>
+                        Nghỉ phép
+                    </option>
+
+                    <option>
+                        Nghỉ bệnh
+                    </option>
+
+                    <option>
+                        Nghỉ việc riêng
+                    </option>
+
+                    <option>
+                        Nghỉ không lương
+                    </option>
+
+                    <option>
+                        Khác
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="col-12">
+
+                <label class="form-label">
+                    Lý do
+                </label>
+
+                <textarea
+                    class="form-control"
+                    name="reason"
+                    rows="5"
+                    placeholder="Nhập lý do xin nghỉ..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="btn btn-success w-100 leave-submit"
+        >
+
+            <i class="bi bi-send-fill"></i>
+
+            Gửi đơn xin nghỉ
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =================================================
+         INFO
+    ================================================== -->
+
+    <div class="leave-info-card">
+
+
+        <span class="dashboard-eyebrow">
+            QUY TRÌNH
+        </span>
+
+        <h4>
+            Sau khi gửi đơn
+        </h4>
+
+
+        <div class="leave-step">
+
+
+            <span>
+                1
+            </span>
+
+            <div>
+
+                <strong>
+                    Gửi yêu cầu
+                </strong>
+
+                <p>
+                    Đơn được chuyển tới Admin.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="leave-step">
+
+
+            <span>
+                2
+            </span>
+
+            <div>
+
+                <strong>
+                    Chờ phê duyệt
+                </strong>
+
+                <p>
+                    Admin xem lý do
+                    và thời gian nghỉ.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="leave-step">
+
+
+            <span>
+                3
+            </span>
+
+            <div>
+
+                <strong>
+                    Cập nhật lịch
+                </strong>
+
+                <p>
+                    Khi được duyệt,
+                    hệ thống không tự phân công
+                    bạn trong thời gian nghỉ.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     HISTORY
+===================================================== -->
+
+<div class="content-card leave-history-card">
+
+
+    <div class="panel-heading">
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                LỊCH SỬ
+            </span>
+
+            <h4>
+                Đơn xin nghỉ của tôi
+            </h4>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Thời gian
+                    </th>
+
+                    <th>
+                        Loại nghỉ
+                    </th>
+
+                    <th>
+                        Lý do
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                    <th>
+                        Phản hồi Admin
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for item in items %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        <strong>
+
+                            {{
+                                item.start_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </strong>
+
+                        <span class="d-block text-body-secondary">
+
+                            đến
+
+                            {{
+                                item.end_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ item.leave_type }}
+
+                    </td>
+
+
+                    <td class="leave-reason-cell">
+
+                        {{ item.reason }}
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if item.status == "Đã duyệt" %}
+
+                        <span class="status-badge status-success">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Đã duyệt
+
+                        </span>
+
+
+                        {% elif item.status == "Từ chối" %}
+
+                        <span class="status-badge status-danger">
+
+                            <i class="bi bi-x-circle-fill"></i>
+
+                            Từ chối
+
+                        </span>
+
+
+                        {% else %}
+
+                        <span class="status-badge status-wait">
+
+                            <i class="bi bi-hourglass-split"></i>
+
+                            Chờ duyệt
+
+                        </span>
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                    <td>
+
+                        {{
+                            item.admin_note
+                            or "—"
+                        }}
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="text-center py-5"
+                    >
+
+                        Chưa có đơn xin nghỉ.
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

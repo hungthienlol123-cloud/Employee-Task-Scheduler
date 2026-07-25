@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Chấm công - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+CHẤM CÔNG CỦA TÔI
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     CLOCK
+===================================================== -->
+
+<div class="attendance-clock-card">
+
+
+    <div>
+
+
+        <span class="dashboard-eyebrow">
+            HÔM NAY
+        </span>
+
+        <h2 id="live-clock">
+            --:--:--
+        </h2>
+
+        <p id="live-date">
+            --
+        </p>
+
+
+    </div>
+
+
+    <div class="attendance-current-status">
+
+
+        {% if record %}
+
+
+        <span class="status-badge status-success">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            {{ record.status }}
+
+        </span>
+
+
+        <div class="attendance-current-time">
+
+
+            <div>
+
+                <span>
+                    Giờ vào
+                </span>
+
+                <strong>
+
+                    {{
+                        record.check_in.strftime("%H:%M:%S")
+                        if record.check_in
+                        else "--"
+                    }}
+
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Giờ ra
+                </span>
+
+                <strong>
+
+                    {{
+                        record.check_out.strftime("%H:%M:%S")
+                        if record.check_out
+                        else "--"
+                    }}
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <span class="status-badge status-off">
+
+            Chưa chấm công
+
+        </span>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     ACTION
+===================================================== -->
+
+<div class="attendance-action-grid">
+
+
+    <form
+        method="post"
+        class="attendance-action-card attendance-checkin"
+    >
+
+        <input
+            type="hidden"
+            name="action"
+            value="in"
+        >
+
+        <div class="attendance-big-icon">
+
+            <i class="bi bi-box-arrow-in-right"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                Chấm công vào
+            </strong>
+
+            <span>
+                Xác nhận thời gian bắt đầu làm việc.
+            </span>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-success"
+        >
+
+            Check-in
+
+        </button>
+
+    </form>
+
+
+    <form
+        method="post"
+        class="attendance-action-card attendance-checkout"
+    >
+
+        <input
+            type="hidden"
+            name="action"
+            value="out"
+        >
+
+        <div class="attendance-big-icon">
+
+            <i class="bi bi-box-arrow-right"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                Chấm công ra
+            </strong>
+
+            <span>
+                Xác nhận kết thúc ngày làm việc.
+            </span>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            Check-out
+
+        </button>
+
+    </form>
+
+
+</div>
+
+
+<!-- =====================================================
+     HISTORY
+===================================================== -->
+
+<div class="content-card">
+
+
+    <div class="panel-heading">
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                LỊCH SỬ
+            </span>
+
+            <h4>
+                30 lần chấm công gần nhất
+            </h4>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Ngày
+                    </th>
+
+                    <th>
+                        Giờ vào
+                    </th>
+
+                    <th>
+                        Giờ ra
+                    </th>
+
+                    <th>
+                        Tổng thời gian
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for item in history %}
+
+
+                <tr>
+
+                    <td>
+
+                        {{
+                            item.work_date.strftime(
+                                "%d/%m/%Y"
+                            )
+                        }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{
+                            item.check_in.strftime("%H:%M:%S")
+                            if item.check_in
+                            else "--"
+                        }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{
+                            item.check_out.strftime("%H:%M:%S")
+                            if item.check_out
+                            else "--"
+                        }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.check_in and item.check_out %}
+
+                            {% set seconds =
+                                (
+                                    item.check_out.hour * 3600
+                                    + item.check_out.minute * 60
+                                    + item.check_out.second
+                                )
+                                -
+                                (
+                                    item.check_in.hour * 3600
+                                    + item.check_in.minute * 60
+                                    + item.check_in.second
+                                )
+                            %}
+
+                            {% set hours =
+                                (seconds // 3600)
+                            %}
+
+                            {% set minutes =
+                                ((seconds % 3600) // 60)
+                            %}
+
+                            {{ hours }}h {{ minutes }}m
+
+                        {% else %}
+
+                            --
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.status == "Đi trễ" %}
+
+                        <span class="status-badge status-wait">
+
+                            Đi trễ
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="status-badge status-success">
+
+                            {{ item.status }}
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="text-center py-5"
+                    >
+
+                        Chưa có lịch sử chấm công.
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+function updateClock()
+{
+
+    const now =
+        new Date();
+
+
+    const clock =
+        document.getElementById(
+            "live-clock"
+        );
+
+
+    const dateElement =
+        document.getElementById(
+            "live-date"
+        );
+
+
+    if (clock)
+    {
+
+        clock.textContent =
+            now.toLocaleTimeString(
+                "vi-VN"
+            );
+
+    }
+
+
+    if (dateElement)
+    {
+
+        dateElement.textContent =
+            now.toLocaleDateString(
+                "vi-VN",
+                {
+                    weekday:
+                        "long",
+
+                    year:
+                        "numeric",
+
+                    month:
+                        "long",
+
+                    day:
+                        "numeric"
+                }
+            );
+
+    }
+
+}
+
+
+updateClock();
+
+
+setInterval(
+    updateClock,
+    1000
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,750 @@
+{% extends "base.html" %}
+
+{% block title %}
+Báo cáo - WorkFlow VIP
+{% endblock %}
+
+{% block page_title %}
+BÁO CÁO VÀ SAO LƯU
+{% endblock %}
+
+{% block content %}
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            REPORT CENTER
+        </span>
+
+        <h3>
+            Báo cáo hệ thống
+        </h3>
+
+        <p>
+            Theo dõi thống kê, xuất dữ liệu CSV
+            và sao lưu cơ sở dữ liệu SQLite.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BẢNG THỐNG KÊ
+===================================================== -->
+
+<div class="content-card report-table-section">
+
+    <div class="table-card-header">
+
+        <div>
+
+            <strong>
+                Tổng quan hệ thống
+            </strong>
+
+            <span>
+                Thống kê trạng thái công việc
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table workflow-table report-summary-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Chỉ số</th>
+
+                    <th>Giá trị</th>
+
+                    <th>Đơn vị</th>
+
+                    <th>Trạng thái</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>1</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-green">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Công việc hoàn thành
+                                </strong>
+
+                                <span>
+                                    Tổng nhiệm vụ đã hoàn tất
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <strong class="report-number">
+                            {{ completed }}
+                        </strong>
+
+                    </td>
+
+                    <td>
+                        Công việc
+                    </td>
+
+                    <td>
+
+                        <span class="table-badge badge-success">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Hoàn thành
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>2</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-orange">
+
+                                <i class="bi bi-hourglass-split"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Chưa hoàn thành
+                                </strong>
+
+                                <span>
+                                    Nhiệm vụ đang chờ xử lý
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <strong class="report-number">
+                            {{ pending }}
+                        </strong>
+
+                    </td>
+
+                    <td>
+                        Công việc
+                    </td>
+
+                    <td>
+
+                        <span class="table-badge badge-warning">
+
+                            <i class="bi bi-clock-fill"></i>
+
+                            Đang xử lý
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>3</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-blue">
+
+                                <i class="bi bi-list-task"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Tổng phân công
+                                </strong>
+
+                                <span>
+                                    Tổng số nhiệm vụ trong hệ thống
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <strong class="report-number">
+
+                            {{ completed + pending }}
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+                        Công việc
+                    </td>
+
+                    <td>
+
+                        <span class="table-badge badge-primary">
+
+                            <i class="bi bi-database-fill"></i>
+
+                            Tổng dữ liệu
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>4</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-purple">
+
+                                <i class="bi bi-percent"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Tỷ lệ hoàn thành
+                                </strong>
+
+                                <span>
+                                    Hiệu suất hoàn thành nhiệm vụ
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <strong class="report-number">
+
+                            {% if completed + pending > 0 %}
+
+                            {{
+                                (
+                                    completed
+                                    /
+                                    (completed + pending)
+                                    *
+                                    100
+                                )
+                                | round(1)
+                            }}
+
+                            {% else %}
+
+                            0
+
+                            {% endif %}
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+                        %
+                    </td>
+
+                    <td>
+
+                        {% set total = completed + pending %}
+
+                        {% if total > 0 and (completed / total * 100) >= 70 %}
+
+                        <span class="table-badge badge-success">
+                            Tốt
+                        </span>
+
+                        {% elif total > 0 and (completed / total * 100) >= 40 %}
+
+                        <span class="table-badge badge-warning">
+                            Trung bình
+                        </span>
+
+                        {% else %}
+
+                        <span class="table-badge badge-danger">
+                            Cần cải thiện
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BẢNG XUẤT DỮ LIỆU
+===================================================== -->
+
+<div class="content-card report-table-section">
+
+    <div class="table-card-header">
+
+        <div>
+
+            <strong>
+                Xuất dữ liệu
+            </strong>
+
+            <span>
+                Tải dữ liệu CSV để mở bằng Excel hoặc Google Sheets
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table workflow-table report-export-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Loại dữ liệu</th>
+
+                    <th>Module</th>
+
+                    <th>Định dạng</th>
+
+                    <th>Mô tả</th>
+
+                    <th class="text-end">
+                        Thao tác
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>1</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-blue">
+
+                                <i class="bi bi-people-fill"></i>
+
+                            </div>
+
+                            <strong>
+                                Danh sách nhân viên
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        Employee
+                    </td>
+
+                    <td>
+
+                        <span class="file-type-badge">
+                            CSV
+                        </span>
+
+                    </td>
+
+                    <td>
+                        Hồ sơ và thông tin nhân viên
+                    </td>
+
+                    <td class="text-end">
+
+                        <a
+                            href="{{ url_for('dashboard.export_csv', kind='employees') }}"
+                            class="btn btn-outline-primary btn-sm"
+                        >
+
+                            <i class="bi bi-download"></i>
+
+                            Tải xuống
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>2</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-green">
+
+                                <i class="bi bi-check2-square"></i>
+
+                            </div>
+
+                            <strong>
+                                Danh sách công việc
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        Task
+                    </td>
+
+                    <td>
+
+                        <span class="file-type-badge">
+                            CSV
+                        </span>
+
+                    </td>
+
+                    <td>
+                        Danh mục công việc và mức ưu tiên
+                    </td>
+
+                    <td class="text-end">
+
+                        <a
+                            href="{{ url_for('dashboard.export_csv', kind='tasks') }}"
+                            class="btn btn-outline-success btn-sm"
+                        >
+
+                            <i class="bi bi-download"></i>
+
+                            Tải xuống
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>3</td>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-orange">
+
+                                <i class="bi bi-calendar2-check-fill"></i>
+
+                            </div>
+
+                            <strong>
+                                Lịch phân công
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        Schedule
+                    </td>
+
+                    <td>
+
+                        <span class="file-type-badge">
+                            CSV
+                        </span>
+
+                    </td>
+
+                    <td>
+                        Lịch nhân viên và công việc được giao
+                    </td>
+
+                    <td class="text-end">
+
+                        <a
+                            href="{{ url_for('dashboard.export_csv', kind='schedules') }}"
+                            class="btn btn-outline-warning btn-sm"
+                        >
+
+                            <i class="bi bi-download"></i>
+
+                            Tải xuống
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BACKUP TABLE
+===================================================== -->
+
+<div class="content-card">
+
+    <div class="table-card-header">
+
+        <div>
+
+            <strong>
+                Sao lưu cơ sở dữ liệu
+            </strong>
+
+            <span>
+                Quản lý bản sao lưu SQLite
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table workflow-table backup-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Database</th>
+
+                    <th>Loại</th>
+
+                    <th>Định dạng</th>
+
+                    <th>Vị trí lưu</th>
+
+                    <th>Trạng thái</th>
+
+                    <th class="text-end">
+                        Thao tác
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+
+                        <div class="report-table-name">
+
+                            <div class="report-table-icon report-icon-green">
+
+                                <i class="bi bi-database-fill-check"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    WorkFlow Database
+                                </strong>
+
+                                <span>
+                                    Cơ sở dữ liệu chính
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+                        SQLite
+                    </td>
+
+                    <td>
+
+                        <span class="file-type-badge database-file-badge">
+                            .DB
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <code class="backup-path">
+
+                            instance/backups/
+
+                        </code>
+
+                    </td>
+
+                    <td>
+
+                        <span class="table-badge badge-success">
+
+                            <i class="bi bi-shield-check"></i>
+
+                            Sẵn sàng
+
+                        </span>
+
+                    </td>
+
+                    <td class="text-end">
+
+                        <form
+                            method="post"
+                            action="{{ url_for('dashboard.backup') }}"
+                            onsubmit="return confirm('Bạn muốn sao lưu database ngay bây giờ?');"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger btn-sm"
+                            >
+
+                                <i class="bi bi-database-down"></i>
+
+                                Sao lưu
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="report-bottom-note">
+
+        <i class="bi bi-info-circle-fill"></i>
+
+        <span>
+
+            File CSV có thể mở bằng Microsoft Excel hoặc Google Sheets.
+            File SQLite backup được lưu trong
+            <code>instance/backups</code>.
+
+        </span>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

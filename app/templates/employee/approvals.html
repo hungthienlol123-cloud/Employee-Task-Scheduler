@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Duyệt tài khoản - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+DUYỆT TÀI KHOẢN
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            ACCOUNT APPROVAL
+        </span>
+
+        <h3>
+            Yêu cầu đăng ký nhân viên
+        </h3>
+
+        <p>
+            Tài khoản nhân viên chỉ được
+            sử dụng sau khi Admin phê duyệt.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<div class="approval-summary">
+
+
+    <div class="approval-summary-icon">
+
+        <i class="bi bi-shield-check"></i>
+
+    </div>
+
+
+    <div>
+
+        <strong>
+            Quy trình kiểm soát tài khoản
+        </strong>
+
+        <span>
+            Nhân viên đăng ký →
+            Admin kiểm tra →
+            Duyệt →
+            Tài khoản được kích hoạt.
+        </span>
+
+    </div>
+
+
+</div>
+
+
+<div class="content-card">
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Nhân viên
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Phòng ban
+                    </th>
+
+                    <th>
+                        Username
+                    </th>
+
+                    <th>
+                        Ngày gửi
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                    <th class="text-end">
+                        Xử lý
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for item in requests %}
+
+
+                <tr>
+
+
+                    <td>
+
+
+                        <div class="employee-cell">
+
+
+                            <div class="employee-list-avatar">
+
+                                {{
+                                    item.full_name[:2]
+                                    | upper
+                                }}
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+
+                                    {{ item.full_name }}
+
+                                </strong>
+
+
+                                <small>
+
+                                    {{
+                                        item.phone
+                                        or "Không có SĐT"
+                                    }}
+
+                                </small>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                    <td>
+
+                        {{ item.email }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{
+                            item.department
+                            or "Chưa cập nhật"
+                        }}
+
+                    </td>
+
+
+                    <td>
+
+                        <code class="username-code">
+
+                            {{ item.username }}
+
+                        </code>
+
+                    </td>
+
+
+                    <td>
+
+                        {{
+                            item.created_at.strftime(
+                                "%d/%m/%Y %H:%M"
+                            )
+                        }}
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if item.status == "Chờ duyệt" %}
+
+
+                        <span class="status-badge status-wait">
+
+                            <i class="bi bi-hourglass-split"></i>
+
+                            Chờ duyệt
+
+                        </span>
+
+
+                        {% elif item.status == "Đã duyệt" %}
+
+
+                        <span class="status-badge status-success">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Đã duyệt
+
+                        </span>
+
+
+                        {% else %}
+
+
+                        <span class="status-badge status-danger">
+
+                            <i class="bi bi-x-circle-fill"></i>
+
+                            Từ chối
+
+                        </span>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                    <td class="text-end">
+
+
+                        {% if item.status == "Chờ duyệt" %}
+
+
+                        <div class="approval-action-group">
+
+
+                            <form
+                                method="post"
+                                action="{{ url_for('employee.approve', request_id=item.id) }}"
+                            >
+
+
+                                <button
+                                    class="btn btn-sm btn-success"
+                                    type="submit"
+                                >
+
+                                    <i class="bi bi-check-lg"></i>
+
+                                    Duyệt
+
+                                </button>
+
+
+                            </form>
+
+
+                            <form
+                                method="post"
+                                action="{{ url_for('employee.reject', request_id=item.id) }}"
+                                onsubmit="
+                                    return confirm(
+                                        'Từ chối tài khoản này?'
+                                    );
+                                "
+                            >
+
+
+                                <input
+                                    type="hidden"
+                                    name="admin_note"
+                                    value="Admin từ chối yêu cầu đăng ký."
+                                >
+
+
+                                <button
+                                    class="btn btn-sm btn-outline-danger"
+                                    type="submit"
+                                >
+
+                                    <i class="bi bi-x-lg"></i>
+
+                                    Từ chối
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+                        {% else %}
+
+
+                        <small class="text-body-secondary">
+
+                            {{
+                                item.admin_note
+                                or "Đã xử lý"
+                            }}
+
+                        </small>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+
+                    <td
+                        colspan="7"
+                        class="text-center py-5"
+                    >
+
+
+                        <div class="empty-state">
+
+
+                            <i class="bi bi-person-check"></i>
+
+
+                            <h5>
+
+                                Không có yêu cầu đăng ký
+
+                            </h5>
+
+
+                            <p>
+
+                                Các yêu cầu mới sẽ xuất hiện tại đây.
+
+                            </p>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

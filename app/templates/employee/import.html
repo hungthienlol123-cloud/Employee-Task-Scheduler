@@ -1,0 +1,532 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Nhập dữ liệu - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+NHẬP DỮ LIỆU NHÂN VIÊN
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            IMPORT DATA
+        </span>
+
+        <h3>
+            Nhập hồ sơ hàng loạt
+        </h3>
+
+        <p>
+            Hỗ trợ Excel, CSV và Google Sheets.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('employee.index') }}"
+        class="btn btn-outline-secondary"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Danh sách nhân viên
+
+    </a>
+
+
+</div>
+
+
+<div class="import-grid">
+
+
+    <!-- =================================================
+         FILE
+    ================================================== -->
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="import-card"
+    >
+
+
+        <input
+            type="hidden"
+            name="source_type"
+            value="file"
+        >
+
+
+        <div class="import-icon import-icon-blue">
+
+            <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+
+        </div>
+
+
+        <h4>
+            Excel / CSV
+        </h4>
+
+
+        <p>
+            Upload file
+            <strong>.xlsx</strong>
+            hoặc
+            <strong>.csv</strong>
+            chứa danh sách nhân viên.
+        </p>
+
+
+        <label class="file-drop-area">
+
+
+            <i class="bi bi-cloud-arrow-up"></i>
+
+
+            <strong>
+                Chọn file dữ liệu
+            </strong>
+
+
+            <span>
+                Nhấn để chọn file từ máy tính
+            </span>
+
+
+            <input
+                type="file"
+                name="file"
+                accept=".xlsx,.csv"
+                hidden
+                id="employee-file-input"
+            >
+
+
+        </label>
+
+
+        <div
+            id="selected-file-name"
+            class="selected-file-name"
+        >
+
+        </div>
+
+
+        <label class="import-account-option">
+
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                name="create_accounts"
+                value="1"
+            >
+
+
+            <div>
+
+                <strong>
+                    Tự tạo tài khoản
+                </strong>
+
+                <span>
+                    Mật khẩu mặc định:
+                    123456
+                </span>
+
+            </div>
+
+
+        </label>
+
+
+        <button
+            class="btn btn-primary w-100"
+            type="submit"
+        >
+
+            <i class="bi bi-upload"></i>
+
+            Nhập dữ liệu
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =================================================
+         GOOGLE
+    ================================================== -->
+
+    <form
+        method="post"
+        class="import-card"
+    >
+
+
+        <input
+            type="hidden"
+            name="source_type"
+            value="google"
+        >
+
+
+        <div class="import-icon import-icon-green">
+
+            <i class="bi bi-google"></i>
+
+        </div>
+
+
+        <h4>
+            Google Sheets
+        </h4>
+
+
+        <p>
+            Dán link Google Sheets đã cấp
+            quyền xem cho mọi người có liên kết.
+        </p>
+
+
+        <div class="google-sheet-input">
+
+
+            <i class="bi bi-link-45deg"></i>
+
+
+            <input
+                type="url"
+                class="form-control"
+                name="google_url"
+                placeholder="https://docs.google.com/spreadsheets/..."
+            >
+
+
+        </div>
+
+
+        <label class="import-account-option">
+
+
+            <input
+                class="form-check-input"
+                type="checkbox"
+                name="create_accounts"
+                value="1"
+            >
+
+
+            <div>
+
+                <strong>
+                    Tự tạo tài khoản
+                </strong>
+
+                <span>
+                    Mật khẩu mặc định:
+                    123456
+                </span>
+
+            </div>
+
+
+        </label>
+
+
+        <button
+            class="btn btn-success w-100"
+            type="submit"
+        >
+
+            <i class="bi bi-google"></i>
+
+            Nhập Google Sheets
+
+        </button>
+
+
+    </form>
+
+
+</div>
+
+
+<!-- =====================================================
+     FORMAT
+===================================================== -->
+
+<div class="content-card import-format-card">
+
+
+    <div class="panel-heading">
+
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                CẤU TRÚC FILE
+            </span>
+
+            <h4>
+                Các cột được hỗ trợ
+            </h4>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="import-column-grid">
+
+
+        <span>
+            Họ tên
+        </span>
+
+        <span>
+            Phòng ban
+        </span>
+
+        <span>
+            Email
+        </span>
+
+        <span>
+            Số điện thoại
+        </span>
+
+        <span>
+            Chức vụ
+        </span>
+
+        <span>
+            Ngày vào làm
+        </span>
+
+        <span>
+            Kỹ năng
+        </span>
+
+        <span>
+            Địa chỉ
+        </span>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     RESULT
+===================================================== -->
+
+{% if result %}
+
+
+<div class="import-result">
+
+
+    <div class="import-result-title">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        <div>
+
+            <strong>
+                Nhập dữ liệu hoàn tất
+            </strong>
+
+            <span>
+                Kết quả xử lý file
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="import-result-grid">
+
+
+        <div>
+
+            <strong>
+                {{ result.created }}
+            </strong>
+
+            <span>
+                Thêm mới
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                {{ result.updated }}
+            </strong>
+
+            <span>
+                Cập nhật
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                {{ result.skipped }}
+            </strong>
+
+            <span>
+                Bỏ qua
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    {% if result.accounts %}
+
+
+    <hr>
+
+
+    <h5>
+        Tài khoản vừa tạo
+    </h5>
+
+
+    <div class="created-account-list">
+
+
+        {% for
+            employee_name,
+            username,
+            password
+            in result.accounts
+        %}
+
+
+        <div class="created-account-row">
+
+
+            <span>
+
+                {{ employee_name }}
+
+            </span>
+
+
+            <strong>
+
+                {{ username }}
+
+            </strong>
+
+
+            <code>
+
+                {{ password }}
+
+            </code>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+{% endif %}
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+
+<script>
+
+
+const fileInput =
+    document.getElementById(
+        "employee-file-input"
+    );
+
+
+const fileName =
+    document.getElementById(
+        "selected-file-name"
+    );
+
+
+fileInput.addEventListener(
+    "change",
+    function ()
+    {
+
+        if (
+            this.files
+            &&
+            this.files.length
+        )
+        {
+
+            fileName.innerHTML =
+                '<i class="bi bi-file-earmark-check-fill"></i> '
+                +
+                this.files[0].name;
+
+        }
+
+        else
+        {
+
+            fileName.textContent =
+                "";
+
+        }
+
+    }
+);
+
+
+</script>
+
+
+{% endblock %}

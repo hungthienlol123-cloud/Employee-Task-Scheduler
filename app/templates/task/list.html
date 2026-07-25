@@ -1,0 +1,410 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Công việc - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+QUẢN LÝ CÔNG VIỆC
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            TASK MODULE
+        </span>
+
+        <h3>
+            Danh mục công việc
+        </h3>
+
+        <p>
+            Tạo, chỉnh sửa và quản lý
+            các công việc trong hệ thống.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('task.create') }}"
+        class="btn btn-primary"
+    >
+
+        <i class="bi bi-plus-circle-fill"></i>
+
+        Thêm công việc
+
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     FILTER
+===================================================== -->
+
+<div class="filter-card">
+
+    <form
+        method="get"
+        class="task-filter-grid"
+    >
+
+        <div class="filter-search">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                class="form-control"
+                name="q"
+                placeholder="Tìm tên, nhóm hoặc mô tả..."
+                value="{{ request.args.get('q', '') }}"
+            >
+
+        </div>
+
+
+        <select
+            class="form-select"
+            name="priority"
+        >
+
+            <option value="">
+                Tất cả mức ưu tiên
+            </option>
+
+            <option
+                value="Cao"
+                {% if request.args.get('priority') == 'Cao' %}
+                selected
+                {% endif %}
+            >
+                Cao
+            </option>
+
+            <option
+                value="Trung bình"
+                {% if request.args.get('priority') == 'Trung bình' %}
+                selected
+                {% endif %}
+            >
+                Trung bình
+            </option>
+
+            <option
+                value="Thấp"
+                {% if request.args.get('priority') == 'Thấp' %}
+                selected
+                {% endif %}
+            >
+                Thấp
+            </option>
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-funnel-fill"></i>
+
+            Lọc
+
+        </button>
+
+
+        <a
+            href="{{ url_for('task.index') }}"
+            class="btn btn-outline-secondary"
+        >
+
+            Đặt lại
+
+        </a>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================================
+     TASK TABLE
+===================================================== -->
+
+<div class="content-card">
+
+
+    <div class="task-list-heading">
+
+        <div>
+
+            <strong>
+                Danh sách công việc
+            </strong>
+
+            <span>
+                {{ tasks|length }} công việc
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Công việc
+                    </th>
+
+                    <th>
+                        Nhóm
+                    </th>
+
+                    <th>
+                        Ưu tiên
+                    </th>
+
+                    <th>
+                        Giờ dự kiến
+                    </th>
+
+                    <th>
+                        Mô tả
+                    </th>
+
+                    <th class="text-end">
+                        Thao tác
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for task in tasks %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        <div class="task-name-cell">
+
+                            <div class="task-icon-small">
+
+                                <i class="bi bi-check2-square"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ task.task_name }}
+                                </strong>
+
+                                <small>
+                                    TASK-{{ "%04d"|format(task.id) }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if task.category %}
+
+                        <span class="task-category">
+
+                            <i class="bi bi-folder-fill"></i>
+
+                            {{ task.category }}
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="text-body-secondary">
+                            Chưa phân nhóm
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if task.priority == "Cao" %}
+
+                        <span class="priority-badge priority-high">
+
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                            Cao
+
+                        </span>
+
+                        {% elif task.priority == "Trung bình" %}
+
+                        <span class="priority-badge priority-medium">
+
+                            Trung bình
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="priority-badge priority-low">
+
+                            Thấp
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="estimated-time">
+
+                            <i class="bi bi-clock"></i>
+
+                            {{ task.estimated_hours }} giờ
+
+                        </span>
+
+                    </td>
+
+
+                    <td class="task-description-cell">
+
+                        {{
+                            task.description
+                            or "Chưa có mô tả"
+                        }}
+
+                    </td>
+
+
+                    <td class="text-end">
+
+                        <div class="table-action-group">
+
+                            <a
+                                href="{{ url_for('task.edit', task_id=task.id) }}"
+                                class="table-action-btn action-edit"
+                                title="Chỉnh sửa"
+                            >
+
+                                <i class="bi bi-pencil-fill"></i>
+
+                            </a>
+
+
+                            <form
+                                method="post"
+                                action="{{ url_for('task.delete', task_id=task.id) }}"
+                                onsubmit="
+                                    return confirm(
+                                        'Bạn chắc chắn muốn xóa công việc này?'
+                                    );
+                                "
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="table-action-btn action-delete"
+                                    title="Xóa"
+                                >
+
+                                    <i class="bi bi-trash3-fill"></i>
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="text-center py-5"
+                    >
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-clipboard-x"></i>
+
+                            <h5>
+                                Chưa có công việc
+                            </h5>
+
+                            <p>
+                                Hãy tạo công việc đầu tiên.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,570 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Liên hệ - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+
+{% if current_user.role == "admin" %}
+
+TIN NHẮN NHÂN VIÊN
+
+{% else %}
+
+LIÊN HỆ ADMIN
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            INTERNAL SUPPORT
+        </span>
+
+        <h3>
+
+            {% if current_user.role == "admin" %}
+
+            Yêu cầu từ nhân viên
+
+            {% else %}
+
+            Trung tâm hỗ trợ
+
+            {% endif %}
+
+        </h3>
+
+        <p>
+
+            {% if current_user.role == "admin" %}
+
+            Theo dõi và phản hồi
+            các yêu cầu nội bộ.
+
+            {% else %}
+
+            Gửi câu hỏi hoặc yêu cầu
+            trực tiếp tới quản trị viên.
+
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     EMPLOYEE SEND MESSAGE
+===================================================== -->
+
+{% if current_user.role == "employee" %}
+
+
+<div class="contact-layout">
+
+
+    <form
+        method="post"
+        class="contact-send-card"
+    >
+
+
+        <div class="contact-send-heading">
+
+
+            <div class="contact-send-icon">
+
+                <i class="bi bi-headset"></i>
+
+            </div>
+
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    NEW REQUEST
+                </span>
+
+                <h4>
+                    Gửi yêu cầu tới Admin
+                </h4>
+
+                <p>
+                    Mô tả vấn đề hoặc nội dung
+                    bạn cần hỗ trợ.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-group-workflow">
+
+
+            <label>
+                Chủ đề
+            </label>
+
+
+            <input
+                type="text"
+                class="form-control"
+                name="subject"
+                placeholder="Ví dụ: Xin hỗ trợ lịch làm việc"
+                required
+            >
+
+
+        </div>
+
+
+        <div class="form-group-workflow">
+
+
+            <label>
+                Nội dung
+            </label>
+
+
+            <textarea
+                class="form-control"
+                name="content"
+                rows="7"
+                placeholder="Nhập nội dung cần hỗ trợ..."
+                required
+            ></textarea>
+
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary w-100 contact-send-button"
+        >
+
+            <i class="bi bi-send-fill"></i>
+
+            Gửi yêu cầu
+
+        </button>
+
+
+    </form>
+
+
+    <div class="contact-help-card">
+
+
+        <span class="dashboard-eyebrow">
+            HỖ TRỢ NỘI BỘ
+        </span>
+
+
+        <h4>
+            Bạn có thể liên hệ về
+        </h4>
+
+
+        <div class="contact-help-list">
+
+
+            <div>
+
+                <i class="bi bi-calendar-check-fill"></i>
+
+                <span>
+                    Lịch làm việc và phân công
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="bi bi-clock-fill"></i>
+
+                <span>
+                    Chấm công
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="bi bi-person-vcard-fill"></i>
+
+                <span>
+                    Hồ sơ nhân viên
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="bi bi-key-fill"></i>
+
+                <span>
+                    Tài khoản đăng nhập
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="bi bi-calendar2-x-fill"></i>
+
+                <span>
+                    Nghỉ phép
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endif %}
+
+
+<!-- =====================================================
+     MESSAGES
+===================================================== -->
+
+<div class="message-section">
+
+
+    <div class="message-section-title">
+
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+
+                {% if current_user.role == "admin" %}
+
+                INBOX
+
+                {% else %}
+
+                LỊCH SỬ
+
+                {% endif %}
+
+            </span>
+
+
+            <h4>
+
+                {% if current_user.role == "admin" %}
+
+                Danh sách yêu cầu
+
+                {% else %}
+
+                Yêu cầu đã gửi
+
+                {% endif %}
+
+            </h4>
+
+
+        </div>
+
+
+        <span class="message-count">
+
+            {{ messages|length }}
+            tin nhắn
+
+        </span>
+
+
+    </div>
+
+
+    <div class="message-list">
+
+
+        {% for message in messages %}
+
+
+        <article class="message-card">
+
+
+            <div class="message-card-head">
+
+
+                <div class="message-sender">
+
+
+                    <div class="message-avatar">
+
+                        {% if message.sender %}
+
+                        {{
+                            message.sender.full_name[:2]
+                            | upper
+                        }}
+
+                        {% else %}
+
+                        WF
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+
+                        <strong>
+
+                            {% if current_user.role == "admin" %}
+
+                                {% if message.sender %}
+
+                                {{ message.sender.full_name }}
+
+                                {% else %}
+
+                                Người dùng
+
+                                {% endif %}
+
+                            {% else %}
+
+                            {{ message.subject }}
+
+                            {% endif %}
+
+                        </strong>
+
+
+                        <span>
+
+                            {{
+                                message.created_at.strftime(
+                                    "%d/%m/%Y %H:%M"
+                                )
+                            }}
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+                {% if message.status == "Chưa đọc" %}
+
+                <span class="status-badge status-wait">
+
+                    Chưa đọc
+
+                </span>
+
+
+                {% elif message.status == "Đã trả lời" %}
+
+                <span class="status-badge status-success">
+
+                    Đã trả lời
+
+                </span>
+
+
+                {% else %}
+
+                <span class="status-badge status-off">
+
+                    {{ message.status }}
+
+                </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+            {% if current_user.role == "admin" %}
+
+            <div class="message-subject">
+
+                <i class="bi bi-chat-square-text"></i>
+
+                <strong>
+
+                    {{ message.subject }}
+
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="message-content">
+
+                {{ message.content }}
+
+            </div>
+
+
+            <!-- =================================================
+                 ADMIN REPLY EXIST
+            ================================================== -->
+
+            {% if message.admin_reply %}
+
+
+            <div class="message-admin-reply">
+
+
+                <div class="admin-reply-title">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    Phản hồi từ Admin
+
+                </div>
+
+
+                <p>
+
+                    {{ message.admin_reply }}
+
+                </p>
+
+
+            </div>
+
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 ADMIN FORM
+            ================================================== -->
+
+            {% if current_user.role == "admin" %}
+
+
+            <form
+                method="post"
+                action="{{ url_for('dashboard.reply_message', message_id=message.id) }}"
+                class="message-reply-form"
+            >
+
+
+                <div class="message-reply-input">
+
+
+                    <i class="bi bi-reply-fill"></i>
+
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="reply"
+                        placeholder="Nhập phản hồi cho nhân viên..."
+                        value="{{ message.admin_reply or '' }}"
+                        required
+                    >
+
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+
+                    <i class="bi bi-send-fill"></i>
+
+                    Phản hồi
+
+                </button>
+
+
+            </form>
+
+
+            {% endif %}
+
+
+        </article>
+
+
+        {% else %}
+
+
+        <div class="content-card">
+
+            <div class="empty-state">
+
+
+                <i class="bi bi-chat-square-dots"></i>
+
+
+                <h5>
+
+                    Chưa có tin nhắn
+
+                </h5>
+
+
+                <p>
+
+                    Các yêu cầu sẽ xuất hiện tại đây.
+
+                </p>
+
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

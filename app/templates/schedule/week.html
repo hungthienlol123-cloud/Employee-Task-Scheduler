@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Lịch tuần - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+LỊCH LÀM VIỆC TUẦN
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            WEEKLY SCHEDULE
+        </span>
+
+        <h3>
+            Lịch làm việc
+        </h3>
+
+        <p>
+            Theo dõi phân công từ thứ Hai
+            đến thứ Bảy.
+        </p>
+
+    </div>
+
+
+    {% if current_user.role == "admin" %}
+
+    <a
+        href="{{ url_for('schedule.index') }}"
+        class="btn btn-primary"
+    >
+
+        <i class="bi bi-calendar-plus"></i>
+
+        Phân công
+
+    </a>
+
+    {% else %}
+
+    <a
+        href="{{ url_for('schedule.mine') }}"
+        class="btn btn-outline-primary"
+    >
+
+        <i class="bi bi-list-check"></i>
+
+        Công việc của tôi
+
+    </a>
+
+    {% endif %}
+
+</div>
+
+
+<div class="week-legend">
+
+    <div>
+
+        <span class="legend-color legend-morning"></span>
+
+        Ca sáng
+
+    </div>
+
+    <div>
+
+        <span class="legend-color legend-afternoon"></span>
+
+        Ca chiều
+
+    </div>
+
+    <div>
+
+        <span class="legend-color legend-complete"></span>
+
+        Hoàn thành
+
+    </div>
+
+</div>
+
+
+<div class="week-board">
+
+
+    <div class="table-responsive">
+
+
+        <table class="table week-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th class="week-employee-column">
+
+                        Nhân viên
+
+                    </th>
+
+
+                    {% for day in days %}
+
+                    <th>
+
+                        <span class="week-day-name">
+
+                            {% if day.weekday() == 0 %}
+                            Thứ 2
+                            {% elif day.weekday() == 1 %}
+                            Thứ 3
+                            {% elif day.weekday() == 2 %}
+                            Thứ 4
+                            {% elif day.weekday() == 3 %}
+                            Thứ 5
+                            {% elif day.weekday() == 4 %}
+                            Thứ 6
+                            {% else %}
+                            Thứ 7
+                            {% endif %}
+
+                        </span>
+
+                        <strong>
+
+                            {{ day.strftime("%d/%m") }}
+
+                        </strong>
+
+                    </th>
+
+                    {% endfor %}
+
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for employee in employees %}
+
+
+                <tr>
+
+
+                    <td class="week-person">
+
+
+                        <div class="employee-cell">
+
+                            <div class="employee-list-avatar">
+
+                                {{
+                                    employee.full_name[:2]
+                                    | upper
+                                }}
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ employee.full_name }}
+                                </strong>
+
+                                <small>
+                                    {{ employee.department }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                    </td>
+
+
+                    {% for day in days %}
+
+
+                    <td class="week-day-cell">
+
+
+                        {% set items =
+                            matrix
+                            .get(employee.id, {})
+                            .get(day, [])
+                        %}
+
+
+                        {% if items %}
+
+
+                            {% for item in items %}
+
+
+                            <div
+                                class="
+                                    week-task
+                                    {% if item.status == 'Hoàn thành' %}
+                                        week-task-complete
+                                    {% elif item.shift == 'Sáng' %}
+                                        week-task-morning
+                                    {% else %}
+                                        week-task-afternoon
+                                    {% endif %}
+                                "
+                            >
+
+                                <strong>
+                                    {{ item.task.task_name }}
+                                </strong>
+
+                                <span>
+
+                                    {% if item.shift == "Sáng" %}
+
+                                    <i class="bi bi-sun-fill"></i>
+
+                                    {% else %}
+
+                                    <i class="bi bi-cloud-sun-fill"></i>
+
+                                    {% endif %}
+
+                                    {{ item.shift }}
+
+                                </span>
+
+                                <small>
+                                    {{ item.status }}
+                                </small>
+
+                            </div>
+
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+
+                        <div class="week-empty">
+
+                            —
+
+                        </div>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                    {% endfor %}
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="text-center py-5"
+                    >
+                        Chưa có dữ liệu.
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,758 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Dashboard Admin - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+ADMIN DASHBOARD
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     WELCOME
+===================================================== -->
+
+<section class="dashboard-welcome">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            ADMINISTRATOR
+        </span>
+
+        <h2>
+            Xin chào, {{ current_user.full_name }}
+        </h2>
+
+        <p>
+            Tổng quan hoạt động hệ thống ngày {{ now }}.
+        </p>
+
+    </div>
+
+
+    <div class="welcome-actions">
+
+        <a
+            href="{{ url_for('employee.create') }}"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-person-plus-fill"></i>
+            Thêm nhân viên
+        </a>
+
+        <a
+            href="{{ url_for('schedule.auto') }}"
+            class="btn btn-success"
+        >
+            <i class="bi bi-magic"></i>
+            Phân công tự động
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="dashboard-stat-grid">
+
+
+    <a
+        href="{{ url_for('employee.index') }}"
+        class="dashboard-stat-card"
+    >
+
+        <div class="dashboard-stat-icon stat-blue">
+
+            <i class="bi bi-people-fill"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Nhân viên hoạt động
+            </span>
+
+            <strong>
+                {{ stats.employees }}
+            </strong>
+
+            <small>
+                Quản lý nhân sự
+            </small>
+
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('task.index') }}"
+        class="dashboard-stat-card"
+    >
+
+        <div class="dashboard-stat-icon stat-purple">
+
+            <i class="bi bi-list-task"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Công việc
+            </span>
+
+            <strong>
+                {{ stats.tasks }}
+            </strong>
+
+            <small>
+                Danh mục nhiệm vụ
+            </small>
+
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('schedule.index') }}"
+        class="dashboard-stat-card"
+    >
+
+        <div class="dashboard-stat-icon stat-green">
+
+            <i class="bi bi-calendar-check-fill"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Lịch hôm nay
+            </span>
+
+            <strong>
+                {{ stats.today }}
+            </strong>
+
+            <small>
+                Phân công trong ngày
+            </small>
+
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('dashboard.contact') }}"
+        class="dashboard-stat-card"
+    >
+
+        <div class="dashboard-stat-icon stat-orange">
+
+            <i class="bi bi-chat-left-text-fill"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Tin nhắn chưa đọc
+            </span>
+
+            <strong>
+                {{ stats.messages }}
+            </strong>
+
+            <small>
+                Yêu cầu nhân viên
+            </small>
+
+        </div>
+
+    </a>
+
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACTION
+===================================================== -->
+
+<section class="dashboard-panel">
+
+
+    <div class="dashboard-panel-heading">
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                QUICK ACTION
+            </span>
+
+            <h3>
+                Thao tác nhanh
+            </h3>
+
+        </div>
+
+    </div>
+
+
+    <div class="quick-action-grid">
+
+
+        <a
+            href="{{ url_for('employee.create') }}"
+            class="quick-action-card"
+        >
+
+            <div class="quick-icon quick-blue">
+
+                <i class="bi bi-person-plus-fill"></i>
+
+            </div>
+
+            <strong>
+                Thêm nhân viên
+            </strong>
+
+            <span>
+                Tạo hồ sơ mới
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('task.create') }}"
+            class="quick-action-card"
+        >
+
+            <div class="quick-icon quick-purple">
+
+                <i class="bi bi-plus-square-fill"></i>
+
+            </div>
+
+            <strong>
+                Tạo công việc
+            </strong>
+
+            <span>
+                Thêm nhiệm vụ mới
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('schedule.index') }}"
+            class="quick-action-card"
+        >
+
+            <div class="quick-icon quick-green">
+
+                <i class="bi bi-person-check-fill"></i>
+
+            </div>
+
+            <strong>
+                Phân công
+            </strong>
+
+            <span>
+                Giao việc thủ công
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('schedule.auto') }}"
+            class="quick-action-card"
+        >
+
+            <div class="quick-icon quick-orange">
+
+                <i class="bi bi-stars"></i>
+
+            </div>
+
+            <strong>
+                Auto Assign
+            </strong>
+
+            <span>
+                Phân công thông minh
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('schedule.week') }}"
+            class="quick-action-card"
+        >
+
+            <div class="quick-icon quick-blue">
+
+                <i class="bi bi-calendar-week-fill"></i>
+
+            </div>
+
+            <strong>
+                Lịch tuần
+            </strong>
+
+            <span>
+                Theo dõi lịch làm việc
+            </span>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('dashboard.reports') }}"
+            class="quick-action-card"
+        >
+
+            <div class="quick-icon quick-purple">
+
+                <i class="bi bi-bar-chart-fill"></i>
+
+            </div>
+
+            <strong>
+                Báo cáo
+            </strong>
+
+            <span>
+                Xuất và sao lưu dữ liệu
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     MAIN GRID
+===================================================== -->
+
+<div class="dashboard-main-grid">
+
+
+    <!-- =================================================
+         WORKLOAD
+    ================================================== -->
+
+    <section class="dashboard-panel">
+
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    WORKLOAD
+                </span>
+
+                <h3>
+                    Khối lượng công việc
+                </h3>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('schedule.index') }}"
+                class="panel-link"
+            >
+                Xem phân công
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+
+        {% set ns = namespace(max_total=1) %}
+
+        {% for employee, total in workload %}
+
+            {% if total > ns.max_total %}
+                {% set ns.max_total = total %}
+            {% endif %}
+
+        {% endfor %}
+
+
+        <div class="workload-list">
+
+
+            {% for employee, total in workload %}
+
+
+            <div class="workload-item">
+
+
+                <div class="workload-person">
+
+                    <div class="workload-avatar">
+
+                        {{
+                            employee.full_name[:2]
+                            | upper
+                        }}
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{ employee.full_name }}
+                        </strong>
+
+                        <span>
+                            {{ employee.department }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="workload-progress">
+
+
+                    <div class="workload-progress-header">
+
+                        <span>
+                            Công việc đang xử lý
+                        </span>
+
+                        <strong>
+                            {{ total }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="workload-progress-track">
+
+                        <div
+                            class="workload-progress-bar"
+                            data-progress="{{
+                                (
+                                    total
+                                    / ns.max_total
+                                    * 100
+                                )
+                                | round
+                            }}"
+                        ></div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="empty-state">
+
+                <i class="bi bi-people"></i>
+
+                <h5>
+                    Chưa có nhân viên
+                </h5>
+
+                <p>
+                    Thêm nhân viên để theo dõi tải công việc.
+                </p>
+
+            </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =================================================
+         ACTIVITY LOG
+    ================================================== -->
+
+    <section class="dashboard-panel">
+
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    ACTIVITY
+                </span>
+
+                <h3>
+                    Hoạt động gần đây
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="activity-list">
+
+
+            {% for log in logs %}
+
+
+            <div class="activity-item">
+
+
+                <div class="activity-icon">
+
+                    <i class="bi bi-clock-history"></i>
+
+                </div>
+
+
+                <div class="activity-content">
+
+                    <strong>
+                        {{ log.action }}
+                    </strong>
+
+                    <span>
+
+                        {% if log.created_at %}
+
+                            {{
+                                log.created_at.strftime(
+                                    "%d/%m/%Y %H:%M"
+                                )
+                            }}
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="empty-state">
+
+                <i class="bi bi-clock-history"></i>
+
+                <h5>
+                    Chưa có hoạt động
+                </h5>
+
+                <p>
+                    Nhật ký hệ thống sẽ hiển thị tại đây.
+                </p>
+
+            </div>
+
+
+            {% endfor %}
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+<!-- =====================================================
+     MANAGEMENT
+===================================================== -->
+
+<section class="dashboard-panel">
+
+
+    <div class="dashboard-panel-heading">
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                MANAGEMENT CENTER
+            </span>
+
+            <h3>
+                Quản lý hệ thống
+            </h3>
+
+        </div>
+
+    </div>
+
+
+    <div class="management-shortcuts">
+
+
+        <a href="{{ url_for('schedule.attendance_admin') }}">
+
+            <i class="bi bi-clock-fill"></i>
+
+            <div>
+                <strong>
+                    Chấm công
+                </strong>
+
+                <span>
+                    Theo dõi giờ vào và giờ ra
+                </span>
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+        </a>
+
+
+        <a href="{{ url_for('schedule.leave_admin') }}">
+
+            <i class="bi bi-calendar2-x-fill"></i>
+
+            <div>
+                <strong>
+                    Đơn xin nghỉ
+                </strong>
+
+                <span>
+                    Duyệt yêu cầu nhân viên
+                </span>
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+        </a>
+
+
+        <a href="{{ url_for('employee.approvals') }}">
+
+            <i class="bi bi-person-check-fill"></i>
+
+            <div>
+                <strong>
+                    Duyệt tài khoản
+                </strong>
+
+                <span>
+                    Xử lý đăng ký nhân viên
+                </span>
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+        </a>
+
+
+        <a href="{{ url_for('dashboard.reports') }}">
+
+            <i class="bi bi-database-fill-check"></i>
+
+            <div>
+                <strong>
+                    Báo cáo & Backup
+                </strong>
+
+                <span>
+                    Xuất CSV và sao lưu SQLite
+                </span>
+            </div>
+
+            <i class="bi bi-chevron-right"></i>
+
+        </a>
+
+
+    </div>
+
+
+</section>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+document
+    .querySelectorAll(
+        ".workload-progress-bar"
+    )
+    .forEach(
+        function (bar)
+        {
+            let value =
+                Number(
+                    bar.dataset.progress
+                );
+
+            if (
+                Number.isNaN(value)
+            )
+            {
+                value = 0;
+            }
+
+            value =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        value
+                    )
+                );
+
+            bar.style.width =
+                value + "%";
+        }
+    );
+
+</script>
+
+{% endblock %}

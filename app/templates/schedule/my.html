@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}
+Công việc của tôi - WorkFlow VIP
+{% endblock %}
+
+{% block page_title %}
+CÔNG VIỆC CỦA TÔI
+{% endblock %}
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+        <span class="dashboard-eyebrow">
+            MY TASKS
+        </span>
+
+        <h3>
+            Danh sách công việc cá nhân
+        </h3>
+
+        <p>
+            Theo dõi công việc được giao và cập nhật trạng thái hoàn thành.
+        </p>
+    </div>
+
+
+    <a
+        href="{{ url_for('schedule.week') }}"
+        class="btn btn-outline-primary"
+    >
+        <i class="bi bi-calendar-week-fill"></i>
+        Xem lịch tuần
+    </a>
+
+</div>
+
+
+<div class="content-card">
+
+    <div class="table-card-header">
+
+        <div>
+            <strong>
+                Công việc được giao
+            </strong>
+
+            <span>
+                Tổng cộng {{ schedules|length }} công việc
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table workflow-table my-task-table">
+
+            <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>Ngày</th>
+                    <th>Công việc</th>
+                    <th>Nhóm</th>
+                    <th>Ưu tiên</th>
+                    <th>Thời gian</th>
+                    <th>Ca</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for item in schedules %}
+
+                <tr>
+
+                    <td>
+                        {{ loop.index }}
+                    </td>
+
+
+                    <td>
+
+                        <div class="table-date">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            {{
+                                item.work_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="task-table-name">
+
+                            <strong>
+                                {{ item.task.task_name }}
+                            </strong>
+
+                            <span>
+                                {{
+                                    item.task.description
+                                    or "Không có mô tả"
+                                }}
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="table-category">
+
+                            <i class="bi bi-folder-fill"></i>
+
+                            {{
+                                item.task.category
+                                or "Chưa phân nhóm"
+                            }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.task.priority == "Cao" %}
+
+                        <span class="table-badge badge-danger">
+                            Cao
+                        </span>
+
+                        {% elif item.task.priority == "Trung bình" %}
+
+                        <span class="table-badge badge-warning">
+                            Trung bình
+                        </span>
+
+                        {% else %}
+
+                        <span class="table-badge badge-success">
+                            Thấp
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="table-time">
+
+                            <i class="bi bi-clock"></i>
+
+                            {{ item.task.estimated_hours }} giờ
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.shift == "Sáng" %}
+
+                        <span class="table-badge badge-morning">
+
+                            <i class="bi bi-sun-fill"></i>
+
+                            Sáng
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="table-badge badge-afternoon">
+
+                            <i class="bi bi-cloud-sun-fill"></i>
+
+                            Chiều
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.status == "Hoàn thành" %}
+
+                        <span class="table-badge badge-success">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Hoàn thành
+
+                        </span>
+
+                        {% elif item.status == "Đang thực hiện" %}
+
+                        <span class="table-badge badge-primary">
+
+                            <i class="bi bi-play-circle-fill"></i>
+
+                            Đang thực hiện
+
+                        </span>
+
+                        {% elif item.status == "Tạm hoãn" %}
+
+                        <span class="table-badge badge-warning">
+
+                            <i class="bi bi-pause-circle-fill"></i>
+
+                            Tạm hoãn
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="table-badge badge-purple">
+
+                            Đã phân công
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td class="text-end">
+
+                        {% if item.status != "Hoàn thành" %}
+
+                        <form
+                            method="post"
+                            action="{{ url_for('schedule.complete', schedule_id=item.id) }}"
+                            onsubmit="return confirm('Xác nhận hoàn thành công việc này?');"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-sm"
+                            >
+
+                                <i class="bi bi-check-lg"></i>
+
+                                Hoàn thành
+
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                        <span class="completed-check">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="text-center py-5"
+                    >
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-clipboard2-check"></i>
+
+                            <h5>
+                                Chưa có công việc
+                            </h5>
+
+                            <p>
+                                Công việc được Admin giao sẽ xuất hiện tại đây.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

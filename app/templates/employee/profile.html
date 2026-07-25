@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ employee.full_name }} - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+HỒ SƠ NHÂN VIÊN
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="profile-cover">
+
+
+    <div class="profile-cover-pattern"></div>
+
+
+    <div class="profile-main">
+
+
+        {% if employee.photo_path %}
+
+
+        <img
+            src="{{ url_for('static', filename=employee.photo_path) }}"
+            class="profile-large-photo"
+        >
+
+
+        {% else %}
+
+
+        <div class="profile-large-avatar">
+
+            {{
+                employee.full_name[:2]
+                | upper
+            }}
+
+        </div>
+
+
+        {% endif %}
+
+
+        <div class="profile-main-info">
+
+
+            <div class="profile-name-line">
+
+
+                <h2>
+
+                    {{ employee.full_name }}
+
+                </h2>
+
+
+                {% if employee.active %}
+
+
+                <span class="status-badge status-success">
+
+                    <i class="bi bi-circle-fill"></i>
+
+                    Hoạt động
+
+                </span>
+
+
+                {% else %}
+
+
+                <span class="status-badge status-off">
+
+                    Tạm nghỉ
+
+                </span>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+            <p>
+
+                {{
+                    employee.position
+                    or "Nhân viên"
+                }}
+
+                •
+
+                {{ employee.department }}
+
+            </p>
+
+
+            <span class="employee-id-text">
+
+                Mã nhân viên:
+                WF-{{ "%04d"|format(employee.id) }}
+
+            </span>
+
+
+        </div>
+
+
+        <a
+            href="{{ url_for('employee.edit', employee_id=employee.id) }}"
+            class="btn btn-primary profile-edit-button"
+        >
+
+            <i class="bi bi-pencil-square"></i>
+
+            Cập nhật hồ sơ
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     INFORMATION
+===================================================== -->
+
+<div class="profile-grid">
+
+
+    <!-- CONTACT -->
+
+    <section class="profile-card">
+
+
+        <div class="profile-card-title">
+
+            <i class="bi bi-person-lines-fill"></i>
+
+            <h4>
+                Thông tin liên hệ
+            </h4>
+
+        </div>
+
+
+        <div class="profile-detail-list">
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Email
+                </span>
+
+
+                <strong>
+                    {{ employee.email }}
+                </strong>
+
+
+            </div>
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Điện thoại
+                </span>
+
+
+                <strong>
+
+                    {{
+                        employee.phone
+                        or "Chưa cập nhật"
+                    }}
+
+                </strong>
+
+
+            </div>
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Địa chỉ
+                </span>
+
+
+                <strong>
+
+                    {{
+                        employee.address
+                        or "Chưa cập nhật"
+                    }}
+
+                </strong>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- WORK -->
+
+    <section class="profile-card">
+
+
+        <div class="profile-card-title">
+
+            <i class="bi bi-briefcase-fill"></i>
+
+            <h4>
+                Thông tin công việc
+            </h4>
+
+        </div>
+
+
+        <div class="profile-detail-list">
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Phòng ban
+                </span>
+
+
+                <strong>
+                    {{ employee.department }}
+                </strong>
+
+
+            </div>
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Chức vụ
+                </span>
+
+
+                <strong>
+
+                    {{
+                        employee.position
+                        or "Chưa cập nhật"
+                    }}
+
+                </strong>
+
+
+            </div>
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Ngày vào làm
+                </span>
+
+
+                <strong>
+
+                    {% if employee.hire_date %}
+
+                    {{
+                        employee.hire_date.strftime(
+                            "%d/%m/%Y"
+                        )
+                    }}
+
+                    {% else %}
+
+                    Chưa cập nhật
+
+                    {% endif %}
+
+                </strong>
+
+
+            </div>
+
+
+            <div class="profile-detail-row">
+
+
+                <span>
+                    Kỹ năng
+                </span>
+
+
+                <strong>
+
+                    {{
+                        employee.skills
+                        or "Chưa cập nhật"
+                    }}
+
+                </strong>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+<!-- =====================================================
+     ACCOUNT
+===================================================== -->
+
+<div class="profile-card profile-account-card">
+
+
+    <div class="profile-card-title">
+
+        <i class="bi bi-shield-lock-fill"></i>
+
+        <h4>
+            Tài khoản hệ thống
+        </h4>
+
+    </div>
+
+
+    {% if employee.user %}
+
+
+    <div class="employee-account-active">
+
+
+        <div class="account-icon">
+
+            <i class="bi bi-person-check-fill"></i>
+
+        </div>
+
+
+        <div>
+
+
+            <strong>
+
+                Đã liên kết tài khoản
+
+            </strong>
+
+
+            <span>
+
+                Username:
+                {{ employee.user.username }}
+
+            </span>
+
+
+        </div>
+
+
+        <span class="status-badge status-success">
+
+            Hoạt động
+
+        </span>
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="employee-account-active">
+
+
+        <div class="account-icon account-icon-off">
+
+            <i class="bi bi-person-x-fill"></i>
+
+        </div>
+
+
+        <div>
+
+
+            <strong>
+
+                Chưa có tài khoản
+
+            </strong>
+
+
+            <span>
+
+                Nhân viên chưa được cấp
+                quyền đăng nhập.
+
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+{% endblock %}

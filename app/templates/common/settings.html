@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}
+Cài đặt - WorkFlow VIP
+{% endblock %}
+
+{% block page_title %}
+CÀI ĐẶT TÀI KHOẢN
+{% endblock %}
+
+{% block content %}
+
+<div class="module-header">
+
+    <div>
+        <span class="dashboard-eyebrow">
+            SETTINGS
+        </span>
+
+        <h3>
+            Cài đặt tài khoản
+        </h3>
+
+        <p>
+            Quản lý thông tin đăng nhập và giao diện.
+        </p>
+    </div>
+
+</div>
+
+
+<div class="settings-grid">
+
+
+    <!-- ACCOUNT -->
+
+    <section class="dashboard-panel">
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+                <span class="dashboard-eyebrow">
+                    ACCOUNT
+                </span>
+
+                <h3>
+                    Thông tin tài khoản
+                </h3>
+            </div>
+
+        </div>
+
+
+        <div class="settings-profile">
+
+            <div class="settings-avatar">
+
+                {{
+                    current_user.full_name[:2]
+                    | upper
+                }}
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    {{ current_user.full_name }}
+                </h4>
+
+                <span>
+
+                    {% if current_user.role == "admin" %}
+                        Quản trị viên
+                    {% else %}
+                        Nhân viên
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="employee-info-list">
+
+            <div>
+                <span>
+                    Username
+                </span>
+
+                <strong>
+                    {{ current_user.username }}
+                </strong>
+            </div>
+
+
+            <div>
+                <span>
+                    Vai trò
+                </span>
+
+                <strong>
+                    {{ current_user.role }}
+                </strong>
+            </div>
+
+
+            {% if current_user.employee %}
+
+            <div>
+                <span>
+                    Phòng ban
+                </span>
+
+                <strong>
+                    {{ current_user.employee.department }}
+                </strong>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- PASSWORD -->
+
+    <section class="dashboard-panel">
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+                <span class="dashboard-eyebrow">
+                    SECURITY
+                </span>
+
+                <h3>
+                    Đổi mật khẩu
+                </h3>
+            </div>
+
+        </div>
+
+
+        <form method="post">
+
+            <div class="form-group-workflow">
+
+                <label>
+                    Mật khẩu hiện tại
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    name="old_password"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group-workflow">
+
+                <label>
+                    Mật khẩu mới
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    name="new_password"
+                    minlength="6"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group-workflow">
+
+                <label>
+                    Nhập lại mật khẩu mới
+                </label>
+
+                <input
+                    type="password"
+                    class="form-control"
+                    name="confirm_password"
+                    minlength="6"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100"
+            >
+
+                <i class="bi bi-key-fill"></i>
+
+                Cập nhật mật khẩu
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- THEME -->
+
+    <section class="dashboard-panel">
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+                <span class="dashboard-eyebrow">
+                    APPEARANCE
+                </span>
+
+                <h3>
+                    Giao diện
+                </h3>
+            </div>
+
+        </div>
+
+
+        <div class="settings-theme-box">
+
+            <div>
+
+                <i class="bi bi-circle-half"></i>
+
+                <div>
+                    <strong>
+                        Chế độ sáng / tối
+                    </strong>
+
+                    <span>
+                        Thay đổi giao diện WorkFlow VIP.
+                    </span>
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn btn-outline-primary theme-toggle"
+            >
+
+                <i class="bi bi-moon-stars-fill theme-icon"></i>
+
+                Đổi giao diện
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- SYSTEM -->
+
+    <section class="dashboard-panel">
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+                <span class="dashboard-eyebrow">
+                    SYSTEM
+                </span>
+
+                <h3>
+                    Thông tin hệ thống
+                </h3>
+            </div>
+
+        </div>
+
+
+        <div class="employee-info-list">
+
+            <div>
+                <span>
+                    Ứng dụng
+                </span>
+
+                <strong>
+                    WorkFlow VIP
+                </strong>
+            </div>
+
+            <div>
+                <span>
+                    Backend
+                </span>
+
+                <strong>
+                    Python / Flask
+                </strong>
+            </div>
+
+            <div>
+                <span>
+                    Database
+                </span>
+
+                <strong>
+                    SQLite
+                </strong>
+            </div>
+
+            <div>
+                <span>
+                    ORM
+                </span>
+
+                <strong>
+                    SQLAlchemy
+                </strong>
+            </div>
+
+            <div>
+                <span>
+                    Frontend
+                </span>
+
+                <strong>
+                    Bootstrap 5
+                </strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+{% endblock %}

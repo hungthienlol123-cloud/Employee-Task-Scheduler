@@ -1,0 +1,722 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Dashboard Nhân viên - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+EMPLOYEE DASHBOARD
+{% endblock %}
+
+
+{% block content %}
+
+
+{% if employee %}
+
+
+<!-- =====================================================
+     EMPLOYEE WELCOME
+===================================================== -->
+
+<section class="employee-welcome">
+
+
+    <div class="employee-welcome-profile">
+
+
+        {% if employee.photo_path %}
+
+        <img
+            src="{{ url_for('static', filename=employee.photo_path) }}"
+            alt="{{ employee.full_name }}"
+            class="employee-dashboard-photo"
+        >
+
+        {% else %}
+
+        <div class="employee-dashboard-avatar">
+
+            {{
+                employee.full_name[:2]
+                | upper
+            }}
+
+        </div>
+
+        {% endif %}
+
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                EMPLOYEE PORTAL
+            </span>
+
+            <h2>
+                Xin chào, {{ employee.full_name }}
+            </h2>
+
+            <p>
+
+                {{ employee.position or "Nhân viên" }}
+
+                ·
+
+                {{ employee.department }}
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <a
+        href="{{ url_for('schedule.attendance_employee') }}"
+        class="btn btn-success"
+    >
+
+        <i class="bi bi-clock-fill"></i>
+
+        Chấm công
+
+    </a>
+
+
+</section>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="employee-stat-grid">
+
+
+    <a
+        href="{{ url_for('schedule.mine') }}"
+        class="employee-stat-card"
+    >
+
+        <div class="employee-stat-icon employee-stat-blue">
+
+            <i class="bi bi-calendar-check-fill"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Công việc hôm nay
+            </span>
+
+            <strong>
+                {{ stats.today }}
+            </strong>
+
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('schedule.mine') }}"
+        class="employee-stat-card"
+    >
+
+        <div class="employee-stat-icon employee-stat-orange">
+
+            <i class="bi bi-hourglass-split"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Chưa hoàn thành
+            </span>
+
+            <strong>
+                {{ stats.pending }}
+            </strong>
+
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('dashboard.contact') }}"
+        class="employee-stat-card"
+    >
+
+        <div class="employee-stat-icon employee-stat-purple">
+
+            <i class="bi bi-chat-dots-fill"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Yêu cầu đã gửi
+            </span>
+
+            <strong>
+                {{ stats.messages }}
+            </strong>
+
+        </div>
+
+    </a>
+
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACTION
+===================================================== -->
+
+<section class="dashboard-panel">
+
+
+    <div class="dashboard-panel-heading">
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                QUICK ACCESS
+            </span>
+
+            <h3>
+                Truy cập nhanh
+            </h3>
+
+        </div>
+
+    </div>
+
+
+    <div class="employee-action-grid">
+
+
+        <a href="{{ url_for('schedule.mine') }}">
+
+            <div class="quick-icon quick-blue">
+
+                <i class="bi bi-list-check"></i>
+
+            </div>
+
+            <strong>
+                Công việc của tôi
+            </strong>
+
+            <span>
+                Xem nhiệm vụ được giao
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('schedule.week') }}">
+
+            <div class="quick-icon quick-purple">
+
+                <i class="bi bi-calendar-week-fill"></i>
+
+            </div>
+
+            <strong>
+                Lịch tuần
+            </strong>
+
+            <span>
+                Theo dõi lịch làm việc
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('schedule.attendance_employee') }}">
+
+            <div class="quick-icon quick-green">
+
+                <i class="bi bi-clock-fill"></i>
+
+            </div>
+
+            <strong>
+                Chấm công
+            </strong>
+
+            <span>
+                Check-in / Check-out
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('schedule.leave_employee') }}">
+
+            <div class="quick-icon quick-orange">
+
+                <i class="bi bi-calendar2-x-fill"></i>
+
+            </div>
+
+            <strong>
+                Xin nghỉ
+            </strong>
+
+            <span>
+                Gửi yêu cầu nghỉ phép
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('dashboard.notifications') }}">
+
+            <div class="quick-icon quick-blue">
+
+                <i class="bi bi-bell-fill"></i>
+
+            </div>
+
+            <strong>
+                Thông báo
+            </strong>
+
+            <span>
+                Xem thông tin mới
+            </span>
+
+        </a>
+
+
+        <a href="{{ url_for('dashboard.contact') }}">
+
+            <div class="quick-icon quick-purple">
+
+                <i class="bi bi-headset"></i>
+
+            </div>
+
+            <strong>
+                Liên hệ Admin
+            </strong>
+
+            <span>
+                Gửi yêu cầu hỗ trợ
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+</section>
+
+
+<div class="employee-dashboard-grid">
+
+
+    <!-- =================================================
+         PERSONAL INFORMATION
+    ================================================== -->
+
+    <section class="dashboard-panel">
+
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    PROFILE
+                </span>
+
+                <h3>
+                    Thông tin cá nhân
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="employee-info-list">
+
+
+            <div>
+
+                <span>
+                    Họ và tên
+                </span>
+
+                <strong>
+                    {{ employee.full_name }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Phòng ban
+                </span>
+
+                <strong>
+                    {{ employee.department }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Chức vụ
+                </span>
+
+                <strong>
+                    {{ employee.position or "Chưa cập nhật" }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Email
+                </span>
+
+                <strong>
+                    {{ employee.email }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Điện thoại
+                </span>
+
+                <strong>
+                    {{ employee.phone or "Chưa cập nhật" }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Trạng thái
+                </span>
+
+                {% if employee.active %}
+
+                <strong class="employee-active-text">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                    Đang hoạt động
+
+                </strong>
+
+                {% else %}
+
+                <strong class="employee-inactive-text">
+
+                    Ngừng hoạt động
+
+                </strong>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =================================================
+         RECENT TASKS
+    ================================================== -->
+
+    <section class="dashboard-panel employee-recent-panel">
+
+
+        <div class="dashboard-panel-heading">
+
+            <div>
+
+                <span class="dashboard-eyebrow">
+                    RECENT TASKS
+                </span>
+
+                <h3>
+                    Công việc gần đây
+                </h3>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('schedule.mine') }}"
+                class="panel-link"
+            >
+
+                Xem tất cả
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+
+            <table class="table employee-dashboard-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Công việc
+                        </th>
+
+                        <th>
+                            Ngày
+                        </th>
+
+                        <th>
+                            Ca
+                        </th>
+
+                        <th>
+                            Trạng thái
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for item in recent %}
+
+
+                    <tr>
+
+
+                        <td>
+
+                            <div class="employee-task-name">
+
+                                <strong>
+                                    {{ item.task.task_name }}
+                                </strong>
+
+                                <span>
+
+                                    {{ item.task.category or "Chưa phân nhóm" }}
+
+                                    ·
+
+                                    {{ item.task.priority }}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {{
+                                item.work_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if item.shift == "Sáng" %}
+
+                            <span class="employee-shift morning-shift">
+
+                                <i class="bi bi-sun-fill"></i>
+
+                                Sáng
+
+                            </span>
+
+                            {% else %}
+
+                            <span class="employee-shift afternoon-shift">
+
+                                <i class="bi bi-cloud-sun-fill"></i>
+
+                                Chiều
+
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if item.status == "Hoàn thành" %}
+
+                            <span class="employee-status employee-status-complete">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Hoàn thành
+
+                            </span>
+
+
+                            {% elif item.status == "Đang thực hiện" %}
+
+                            <span class="employee-status employee-status-doing">
+
+                                <i class="bi bi-hourglass-split"></i>
+
+                                Đang thực hiện
+
+                            </span>
+
+
+                            {% elif item.status == "Tạm hoãn" %}
+
+                            <span class="employee-status employee-status-hold">
+
+                                Tạm hoãn
+
+                            </span>
+
+
+                            {% else %}
+
+                            <span class="employee-status employee-status-assigned">
+
+                                Đã phân công
+
+                            </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% else %}
+
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            class="text-center py-5"
+                        >
+
+                            <div class="empty-state">
+
+                                <i class="bi bi-clipboard2-check"></i>
+
+                                <h5>
+                                    Chưa có công việc
+                                </h5>
+
+                                <p>
+                                    Công việc được Admin phân công
+                                    sẽ xuất hiện tại đây.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+{% else %}
+
+
+<section class="dashboard-panel">
+
+
+    <div class="empty-state">
+
+        <i class="bi bi-person-exclamation"></i>
+
+        <h5>
+            Chưa có hồ sơ nhân viên
+        </h5>
+
+        <p>
+            Tài khoản này chưa được liên kết
+            với hồ sơ nhân viên.
+        </p>
+
+    </div>
+
+
+</section>
+
+
+{% endif %}
+
+
+{% endblock %}

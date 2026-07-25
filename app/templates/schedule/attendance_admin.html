@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Quản lý chấm công - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+QUẢN LÝ CHẤM CÔNG
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            ATTENDANCE
+        </span>
+
+        <h3>
+            Theo dõi chấm công
+        </h3>
+
+        <p>
+            Kiểm tra thời gian vào,
+            ra và trạng thái nhân viên.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- DATE -->
+
+<div class="attendance-filter-card">
+
+    <form method="get">
+
+        <label>
+            Chọn ngày kiểm tra
+        </label>
+
+        <input
+            type="date"
+            class="form-control"
+            name="date"
+            value="{{ selected_date }}"
+        >
+
+        <button
+            class="btn btn-primary"
+            type="submit"
+        >
+
+            <i class="bi bi-search"></i>
+
+            Kiểm tra
+
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- SUMMARY -->
+
+{% set checked_count = attendance|length %}
+
+{% set total_count = employees|length %}
+
+<div class="attendance-admin-summary">
+
+
+    <div>
+
+        <span>
+            Tổng nhân viên
+        </span>
+
+        <strong>
+            {{ total_count }}
+        </strong>
+
+    </div>
+
+
+    <div>
+
+        <span>
+            Đã chấm công
+        </span>
+
+        <strong class="text-success">
+            {{ checked_count }}
+        </strong>
+
+    </div>
+
+
+    <div>
+
+        <span>
+            Chưa chấm công
+        </span>
+
+        <strong class="text-warning">
+
+            {{
+                total_count
+                - checked_count
+            }}
+
+        </strong>
+
+    </div>
+
+
+</div>
+
+
+<div class="content-card">
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Nhân viên
+                    </th>
+
+                    <th>
+                        Phòng ban
+                    </th>
+
+                    <th>
+                        Giờ vào
+                    </th>
+
+                    <th>
+                        Giờ ra
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for employee in employees %}
+
+
+                {% set record =
+                    attendance.get(
+                        employee.id
+                    )
+                %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        <div class="employee-cell">
+
+                            <div class="employee-list-avatar">
+
+                                {{
+                                    employee.full_name[:2]
+                                    | upper
+                                }}
+
+                            </div>
+
+                            <strong>
+
+                                {{ employee.full_name }}
+
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        {{ employee.department }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if record and record.check_in %}
+
+                        <strong class="attendance-time">
+
+                            {{
+                                record.check_in.strftime(
+                                    "%H:%M:%S"
+                                )
+                            }}
+
+                        </strong>
+
+                        {% else %}
+
+                        <span class="text-body-secondary">
+                            --
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if record and record.check_out %}
+
+                        <strong class="attendance-time">
+
+                            {{
+                                record.check_out.strftime(
+                                    "%H:%M:%S"
+                                )
+                            }}
+
+                        </strong>
+
+                        {% else %}
+
+                        <span class="text-body-secondary">
+                            --
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if not record %}
+
+                        <span class="status-badge status-off">
+
+                            Chưa chấm công
+
+                        </span>
+
+
+                        {% elif record.status == "Đi trễ" %}
+
+                        <span class="status-badge status-wait">
+
+                            <i class="bi bi-exclamation-circle-fill"></i>
+
+                            Đi trễ
+
+                        </span>
+
+
+                        {% else %}
+
+                        <span class="status-badge status-success">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            {{ record.status }}
+
+                        </span>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="text-center py-5"
+                    >
+                        Chưa có nhân viên.
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

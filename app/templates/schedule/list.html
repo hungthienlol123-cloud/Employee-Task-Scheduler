@@ -1,0 +1,527 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Phân công - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+PHÂN CÔNG CÔNG VIỆC
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            SCHEDULE MODULE
+        </span>
+
+        <h3>
+            Điều phối công việc
+        </h3>
+
+        <p>
+            Phân công nhân viên theo
+            ngày, ca và nhiệm vụ.
+        </p>
+
+    </div>
+
+
+    <div class="module-header-actions">
+
+        <a
+            href="{{ url_for('schedule.week') }}"
+            class="btn btn-outline-primary"
+        >
+
+            <i class="bi bi-calendar-week"></i>
+
+            Lịch tuần
+
+        </a>
+
+        <a
+            href="{{ url_for('schedule.auto') }}"
+            class="btn btn-success"
+        >
+
+            <i class="bi bi-magic"></i>
+
+            Phân công tự động
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ASSIGN
+===================================================== -->
+
+<div class="schedule-assign-card">
+
+
+    <div class="schedule-assign-title">
+
+        <div class="schedule-assign-icon">
+
+            <i class="bi bi-person-check-fill"></i>
+
+        </div>
+
+        <div>
+
+            <strong>
+                Phân công nhanh
+            </strong>
+
+            <span>
+                Chọn nhân viên, công việc,
+                ngày và ca làm.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <form
+        method="post"
+        action="{{ url_for('schedule.assign') }}"
+        class="schedule-assign-form"
+    >
+
+
+        <div>
+
+            <label>
+                Nhân viên
+            </label>
+
+            <select
+                class="form-select"
+                name="employee_id"
+                required
+            >
+
+                {% for employee in employees %}
+
+                <option value="{{ employee.id }}">
+
+                    {{ employee.full_name }}
+
+                    -
+
+                    {{ employee.department }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Công việc
+            </label>
+
+            <select
+                class="form-select"
+                name="task_id"
+                required
+            >
+
+                {% for task in tasks %}
+
+                <option value="{{ task.id }}">
+
+                    {{ task.task_name }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Ngày làm việc
+            </label>
+
+            <input
+                type="date"
+                class="form-control"
+                name="work_date"
+                required
+            >
+
+        </div>
+
+
+        <div>
+
+            <label>
+                Ca
+            </label>
+
+            <select
+                class="form-select"
+                name="shift"
+            >
+
+                <option value="Sáng">
+                    Sáng
+                </option>
+
+                <option value="Chiều">
+                    Chiều
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="schedule-note-field">
+
+            <label>
+                Ghi chú
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="note"
+                placeholder="Ghi chú phân công..."
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary schedule-assign-button"
+        >
+
+            <i class="bi bi-check-lg"></i>
+
+            Lưu phân công
+
+        </button>
+
+
+    </form>
+
+
+</div>
+
+
+<!-- =====================================================
+     TABLE
+===================================================== -->
+
+<div class="content-card">
+
+
+    <div class="schedule-table-title">
+
+        <div>
+
+            <strong>
+                Danh sách phân công
+            </strong>
+
+            <span>
+                {{ schedules|length }} bản ghi
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Ngày
+                    </th>
+
+                    <th>
+                        Nhân viên
+                    </th>
+
+                    <th>
+                        Công việc
+                    </th>
+
+                    <th>
+                        Ca
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                    <th>
+                        Ghi chú
+                    </th>
+
+                    <th class="text-end">
+                        Thao tác
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for item in schedules %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        <div class="schedule-date-cell">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            {{
+                                item.work_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="employee-cell">
+
+                            <div class="employee-list-avatar">
+
+                                {{
+                                    item.employee.full_name[:2]
+                                    | upper
+                                }}
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    {{ item.employee.full_name }}
+                                </strong>
+
+                                <small>
+                                    {{ item.employee.department }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ item.task.task_name }}
+                        </strong>
+
+                        <small class="d-block text-body-secondary">
+
+                            {{ item.task.priority }}
+
+                        </small>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.shift == "Sáng" %}
+
+                        <span class="shift-badge shift-morning">
+
+                            <i class="bi bi-sun-fill"></i>
+
+                            Sáng
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="shift-badge shift-afternoon">
+
+                            <i class="bi bi-cloud-sun-fill"></i>
+
+                            Chiều
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <form
+                            method="post"
+                            action="{{ url_for('schedule.update_status', schedule_id=item.id) }}"
+                            class="status-update-form"
+                        >
+
+                            <select
+                                name="status"
+                                class="form-select form-select-sm"
+                                onchange="this.form.submit();"
+                            >
+
+                                {% for status in [
+                                    'Đã phân công',
+                                    'Đang thực hiện',
+                                    'Hoàn thành',
+                                    'Tạm hoãn'
+                                ] %}
+
+                                <option
+                                    value="{{ status }}"
+                                    {% if item.status == status %}
+                                    selected
+                                    {% endif %}
+                                >
+
+                                    {{ status }}
+
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </form>
+
+                    </td>
+
+
+                    <td>
+
+                        {{
+                            item.note
+                            or "—"
+                        }}
+
+                    </td>
+
+
+                    <td class="text-end">
+
+                        <form
+                            method="post"
+                            action="{{ url_for('schedule.delete', schedule_id=item.id) }}"
+                            onsubmit="
+                                return confirm(
+                                    'Xóa phân công này?'
+                                );
+                            "
+                        >
+
+                            <button
+                                type="submit"
+                                class="table-action-btn action-delete"
+                            >
+
+                                <i class="bi bi-trash3-fill"></i>
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="text-center py-5"
+                    >
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-calendar-x"></i>
+
+                            <h5>
+                                Chưa có phân công
+                            </h5>
+
+                            <p>
+                                Hãy tạo lịch làm việc
+                                cho nhân viên.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

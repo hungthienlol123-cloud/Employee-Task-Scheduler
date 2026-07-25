@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=D:\Employee_Task_Scheduler\.venv
+set VIRTUAL_ENV=D:\jj\Employee-Task-Scheduler\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 

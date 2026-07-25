@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+WorkFlow VIP - Employee Task Scheduler
+{% endblock %}
+
+
+{% block public_content %}
+
+
+<div class="landing-page">
+
+
+    <nav class="landing-nav">
+
+        <div class="landing-brand">
+
+            <div class="brand-logo">
+                W
+            </div>
+
+            <div>
+
+                <strong>
+                    WorkFlow
+                </strong>
+
+                <span>
+                    VIP
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="landing-nav-actions">
+
+            <button
+                type="button"
+                class="landing-theme-button theme-toggle"
+            >
+
+                <i class="bi bi-moon-stars-fill theme-icon"></i>
+
+            </button>
+
+
+            <a
+                href="{{ url_for('auth.login') }}"
+                class="btn btn-primary"
+            >
+
+                Đăng nhập
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="landing-hero">
+
+
+        <section class="landing-hero-content">
+
+
+            <span class="hero-badge">
+
+                <i class="bi bi-stars"></i>
+
+                EMPLOYEE TASK SCHEDULER
+
+            </span>
+
+
+            <h1>
+
+                Quản lý nhân sự
+                <span>thông minh hơn.</span>
+
+            </h1>
+
+
+            <p>
+
+                WorkFlow VIP giúp doanh nghiệp quản lý nhân viên,
+                công việc, lịch làm việc, chấm công và nghỉ phép
+                trên cùng một hệ thống.
+
+            </p>
+
+
+            <div class="hero-actions">
+
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="btn btn-primary btn-lg"
+                >
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+
+                    Bắt đầu ngay
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('auth.login') }}#register"
+                    class="btn btn-outline-primary btn-lg"
+                >
+
+                    <i class="bi bi-person-plus-fill"></i>
+
+                    Đăng ký nhân viên
+
+                </a>
+
+
+            </div>
+
+
+            <div class="hero-trust">
+
+
+                <div>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Flask
+                </div>
+
+                <div>
+                    <i class="bi bi-check-circle-fill"></i>
+                    SQLite
+                </div>
+
+                <div>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Bootstrap 5
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <section class="hero-dashboard-preview">
+
+
+            <div class="preview-window">
+
+
+                <div class="preview-window-top">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+
+                <div class="preview-window-content">
+
+
+                    <div class="preview-sidebar">
+
+                        <div class="preview-logo"></div>
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+
+                    <div class="preview-main">
+
+
+                        <div class="preview-title"></div>
+
+
+                        <div class="preview-stats">
+
+                            <div>
+                                <i class="bi bi-people-fill"></i>
+                                <strong>25</strong>
+                                <span>Nhân viên</span>
+                            </div>
+
+                            <div>
+                                <i class="bi bi-list-task"></i>
+                                <strong>18</strong>
+                                <span>Công việc</span>
+                            </div>
+
+                            <div>
+                                <i class="bi bi-calendar-check-fill"></i>
+                                <strong>12</strong>
+                                <span>Lịch hôm nay</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="preview-chart">
+
+                            <span style="height: 35%"></span>
+                            <span style="height: 55%"></span>
+                            <span style="height: 40%"></span>
+                            <span style="height: 75%"></span>
+                            <span style="height: 65%"></span>
+                            <span style="height: 90%"></span>
+                            <span style="height: 70%"></span>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <section class="landing-features">
+
+
+        <article>
+
+            <div class="feature-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+
+            <h3>
+                Quản lý nhân viên
+            </h3>
+
+            <p>
+                Lưu hồ sơ, phòng ban, chức vụ,
+                hình ảnh và tài khoản nhân viên.
+            </p>
+
+        </article>
+
+
+        <article>
+
+            <div class="feature-icon">
+                <i class="bi bi-magic"></i>
+            </div>
+
+            <h3>
+                Phân công thông minh
+            </h3>
+
+            <p>
+                Tự động cân bằng tải,
+                kiểm tra lịch và nghỉ phép.
+            </p>
+
+        </article>
+
+
+        <article>
+
+            <div class="feature-icon">
+                <i class="bi bi-clock-history"></i>
+            </div>
+
+            <h3>
+                Chấm công
+            </h3>
+
+            <p>
+                Check-in, check-out và
+                theo dõi trạng thái đi trễ.
+            </p>
+
+        </article>
+
+
+        <article>
+
+            <div class="feature-icon">
+                <i class="bi bi-bar-chart-fill"></i>
+            </div>
+
+            <h3>
+                Báo cáo
+            </h3>
+
+            <p>
+                Theo dõi tiến độ,
+                xuất CSV và sao lưu SQLite.
+            </p>
+
+        </article>
+
+
+    </section>
+
+
+    <footer class="landing-footer">
+
+        <span>
+            WorkFlow VIP
+        </span>
+
+        <small>
+            Employee Task Scheduler
+        </small>
+
+    </footer>
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Duyệt đơn nghỉ - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+DUYỆT ĐƠN XIN NGHỈ
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            LEAVE MANAGEMENT
+        </span>
+
+        <h3>
+            Yêu cầu nghỉ phép
+        </h3>
+
+        <p>
+            Kiểm tra và xử lý
+            đơn xin nghỉ của nhân viên.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="content-card">
+
+
+    <div class="table-responsive">
+
+
+        <table class="table workflow-table">
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Nhân viên
+                    </th>
+
+                    <th>
+                        Thời gian nghỉ
+                    </th>
+
+                    <th>
+                        Loại
+                    </th>
+
+                    <th>
+                        Lý do
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                    <th>
+                        Xử lý
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for item in items %}
+
+
+                <tr>
+
+
+                    <td>
+
+                        <div class="employee-cell">
+
+                            <div class="employee-list-avatar">
+
+                                {{
+                                    item.employee.full_name[:2]
+                                    | upper
+                                }}
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+
+                                    {{ item.employee.full_name }}
+
+                                </strong>
+
+                                <small>
+
+                                    {{ item.employee.department }}
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+
+                            {{
+                                item.start_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </strong>
+
+                        <span class="d-block text-body-secondary">
+
+                            đến
+
+                            {{
+                                item.end_date.strftime(
+                                    "%d/%m/%Y"
+                                )
+                            }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="leave-type-badge">
+
+                            {{ item.leave_type }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td class="leave-reason-cell">
+
+                        {{ item.reason }}
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if item.status == "Đã duyệt" %}
+
+                        <span class="status-badge status-success">
+
+                            Đã duyệt
+
+                        </span>
+
+
+                        {% elif item.status == "Từ chối" %}
+
+                        <span class="status-badge status-danger">
+
+                            Từ chối
+
+                        </span>
+
+
+                        {% else %}
+
+                        <span class="status-badge status-wait">
+
+                            Chờ duyệt
+
+                        </span>
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if item.status == "Chờ duyệt" %}
+
+
+                        <form
+                            method="post"
+                            action="{{ url_for('schedule.review_leave', request_id=item.id) }}"
+                            class="leave-review-form"
+                        >
+
+
+                            <input
+                                type="text"
+                                class="form-control form-control-sm"
+                                name="admin_note"
+                                placeholder="Ghi chú..."
+                            >
+
+
+                            <div class="leave-review-buttons">
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-success btn-sm"
+                                    name="status"
+                                    value="Đã duyệt"
+                                >
+
+                                    <i class="bi bi-check-lg"></i>
+
+                                    Duyệt
+
+                                </button>
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-danger btn-sm"
+                                    name="status"
+                                    value="Từ chối"
+                                >
+
+                                    <i class="bi bi-x-lg"></i>
+
+                                    Từ chối
+
+                                </button>
+
+
+                            </div>
+
+
+                        </form>
+
+
+                        {% else %}
+
+
+                        <small class="text-body-secondary">
+
+                            {{
+                                item.admin_note
+                                or "Đã xử lý"
+                            }}
+
+                        </small>
+
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                </tr>
+
+
+                {% else %}
+
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="text-center py-5"
+                    >
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-calendar2-check"></i>
+
+                            <h5>
+                                Không có đơn nghỉ
+                            </h5>
+
+                            <p>
+                                Yêu cầu mới sẽ xuất hiện tại đây.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

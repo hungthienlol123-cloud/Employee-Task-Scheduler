@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+{% if task %}
+Cập nhật công việc
+{% else %}
+Thêm công việc
+{% endif %}
+
+- WorkFlow VIP
+
+{% endblock %}
+
+
+{% block page_title %}
+
+{% if task %}
+CẬP NHẬT CÔNG VIỆC
+{% else %}
+TẠO CÔNG VIỆC
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            TASK MODULE
+        </span>
+
+        <h3>
+
+            {% if task %}
+
+            Chỉnh sửa công việc
+
+            {% else %}
+
+            Tạo công việc mới
+
+            {% endif %}
+
+        </h3>
+
+        <p>
+            Cấu hình nội dung,
+            nhóm và mức độ ưu tiên.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('task.index') }}"
+        class="btn btn-outline-secondary"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Quay lại
+
+    </a>
+
+</div>
+
+
+<form method="post">
+
+
+    <div class="task-form-grid">
+
+
+        <!-- =================================================
+             MAIN
+        ================================================== -->
+
+        <section class="form-section-card">
+
+
+            <div class="form-section-title">
+
+                <div class="form-section-icon icon-blue">
+
+                    <i class="bi bi-list-check"></i>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        Thông tin công việc
+                    </h4>
+
+                    <p>
+                        Nội dung cơ bản của nhiệm vụ.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-3">
+
+
+                <div class="col-md-7">
+
+                    <label class="form-label">
+
+                        Tên công việc
+
+                        <span class="required">
+                            *
+                        </span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="task_name"
+                        placeholder="Ví dụ: Bảo trì hệ thống"
+                        value="{{ task.task_name if task else '' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-5">
+
+                    <label class="form-label">
+                        Nhóm công việc
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="category"
+                        placeholder="Ví dụ: Kỹ thuật"
+                        value="{{ task.category if task else '' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Mức ưu tiên
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="priority"
+                    >
+
+                        <option
+                            value="Cao"
+                            {% if task and task.priority == "Cao" %}
+                            selected
+                            {% endif %}
+                        >
+                            Cao
+                        </option>
+
+                        <option
+                            value="Trung bình"
+                            {% if not task or task.priority == "Trung bình" %}
+                            selected
+                            {% endif %}
+                        >
+                            Trung bình
+                        </option>
+
+                        <option
+                            value="Thấp"
+                            {% if task and task.priority == "Thấp" %}
+                            selected
+                            {% endif %}
+                        >
+                            Thấp
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Thời gian dự kiến
+                    </label>
+
+                    <div class="input-group">
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="estimated_hours"
+                            min="0.5"
+                            step="0.5"
+                            value="{{ task.estimated_hours if task else 4 }}"
+                            required
+                        >
+
+                        <span class="input-group-text">
+                            giờ
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Mô tả
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        name="description"
+                        rows="7"
+                        placeholder="Nhập mô tả chi tiết công việc..."
+                    >{{ task.description if task else '' }}</textarea>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             RIGHT INFO
+        ================================================== -->
+
+        <aside class="task-form-side">
+
+
+            <div class="form-section-card">
+
+
+                <div class="task-form-help-icon">
+
+                    <i class="bi bi-lightbulb-fill"></i>
+
+                </div>
+
+                <h4>
+                    Gợi ý
+                </h4>
+
+                <p>
+                    Nhóm công việc nên trùng
+                    với tên phòng ban của nhân viên.
+                </p>
+
+                <p>
+                    Ví dụ:
+                </p>
+
+                <div class="task-example-list">
+
+                    <span>
+                        Kỹ thuật
+                    </span>
+
+                    <span>
+                        Kinh doanh
+                    </span>
+
+                    <span>
+                        Kế toán
+                    </span>
+
+                    <span>
+                        Hành chính
+                    </span>
+
+                    <span>
+                        IT
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <p>
+                    Điều này giúp chức năng
+                    <strong>phân công tự động</strong>
+                    chọn đúng nhân viên hơn.
+                </p>
+
+            </div>
+
+
+            <div class="task-form-buttons">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+
+                    <i class="bi bi-floppy-fill"></i>
+
+                    {% if task %}
+
+                    Lưu thay đổi
+
+                    {% else %}
+
+                    Tạo công việc
+
+                    {% endif %}
+
+                </button>
+
+                <a
+                    href="{{ url_for('task.index') }}"
+                    class="btn btn-outline-secondary"
+                >
+                    Hủy
+                </a>
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,599 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+
+{% if employee %}
+Cập nhật nhân viên
+{% else %}
+Thêm nhân viên
+{% endif %}
+
+- WorkFlow VIP
+
+{% endblock %}
+
+
+{% block page_title %}
+
+{% if employee %}
+CẬP NHẬT HỒ SƠ
+{% else %}
+THÊM NHÂN VIÊN
+{% endif %}
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            EMPLOYEE MODULE
+        </span>
+
+        <h3>
+
+            {% if employee %}
+
+            Chỉnh sửa thông tin nhân viên
+
+            {% else %}
+
+            Tạo hồ sơ nhân viên mới
+
+            {% endif %}
+
+        </h3>
+
+        <p>
+            Quản lý thông tin cá nhân,
+            công việc và ảnh hồ sơ.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('employee.index') }}"
+        class="btn btn-outline-secondary"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Quay lại
+
+    </a>
+
+
+</div>
+
+
+<form
+    method="post"
+    enctype="multipart/form-data"
+>
+
+
+    <div class="employee-form-grid">
+
+
+        <!-- =================================================
+             MAIN
+        ================================================== -->
+
+        <div class="employee-form-main">
+
+
+            <!-- PERSONAL -->
+
+            <section class="form-section-card">
+
+
+                <div class="form-section-title">
+
+
+                    <div class="form-section-icon icon-blue">
+
+                        <i class="bi bi-person-vcard-fill"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            Thông tin cơ bản
+                        </h4>
+
+                        <p>
+                            Thông tin nhận dạng và liên hệ.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="row g-3">
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Họ và tên
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            class="form-control"
+                            name="full_name"
+                            value="{{ employee.full_name if employee else '' }}"
+                            placeholder="Nhập họ tên"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Email
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="email"
+                            class="form-control"
+                            name="email"
+                            value="{{ employee.email if employee else '' }}"
+                            placeholder="email@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Số điện thoại
+                        </label>
+
+                        <input
+                            class="form-control"
+                            name="phone"
+                            value="{{ employee.phone if employee else '' }}"
+                            placeholder="090..."
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Địa chỉ
+                        </label>
+
+                        <input
+                            class="form-control"
+                            name="address"
+                            value="{{ employee.address if employee else '' }}"
+                            placeholder="Địa chỉ"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+            <!-- WORK -->
+
+            <section class="form-section-card">
+
+
+                <div class="form-section-title">
+
+
+                    <div class="form-section-icon icon-green">
+
+                        <i class="bi bi-briefcase-fill"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            Thông tin công việc
+                        </h4>
+
+                        <p>
+                            Phòng ban, chức vụ và kỹ năng.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="row g-3">
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Phòng ban
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            class="form-control"
+                            name="department"
+                            value="{{ employee.department if employee else '' }}"
+                            placeholder="Ví dụ: Kỹ thuật"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Chức vụ
+                        </label>
+
+                        <input
+                            class="form-control"
+                            name="position"
+                            value="{{ employee.position if employee else '' }}"
+                            placeholder="Ví dụ: Kỹ thuật viên"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Ngày vào làm
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="hire_date"
+                            value="{% if employee and employee.hire_date %}{{ employee.hire_date.isoformat() }}{% endif %}"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Kỹ năng
+                        </label>
+
+                        <input
+                            class="form-control"
+                            name="skills"
+                            value="{{ employee.skills if employee else '' }}"
+                            placeholder="PLC, Excel, bảo trì..."
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+            {% if not employee %}
+
+
+            <!-- ACCOUNT -->
+
+            <section class="form-section-card">
+
+
+                <div class="form-section-title">
+
+
+                    <div class="form-section-icon icon-purple">
+
+                        <i class="bi bi-person-lock"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            Tài khoản hệ thống
+                        </h4>
+
+                        <p>
+                            Có thể tạo tài khoản ngay cho nhân viên.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <label class="create-account-box">
+
+
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        name="create_account"
+                        value="1"
+                    >
+
+
+                    <div>
+
+
+                        <strong>
+
+                            Tạo tài khoản đăng nhập
+
+                        </strong>
+
+
+                        <span>
+
+                            Username tự lấy theo email.
+                            Mật khẩu mặc định:
+                            <b>123456</b>.
+
+                        </span>
+
+
+                    </div>
+
+
+                </label>
+
+
+            </section>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =================================================
+             SIDE
+        ================================================== -->
+
+        <aside class="employee-form-side">
+
+
+            <section class="form-section-card sticky-form-card">
+
+
+                <h4>
+                    Ảnh hồ sơ
+                </h4>
+
+
+                <div class="photo-preview-box">
+
+
+                    {% if employee and employee.photo_path %}
+
+
+                    <img
+                        src="{{ url_for('static', filename=employee.photo_path) }}"
+                        id="photo-preview"
+                    >
+
+
+                    {% else %}
+
+
+                    <div
+                        class="photo-placeholder"
+                        id="photo-placeholder"
+                    >
+
+                        <i class="bi bi-person-fill"></i>
+
+                    </div>
+
+
+                    <img
+                        id="photo-preview"
+                        style="display:none;"
+                    >
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+                <label
+                    for="photo-input"
+                    class="photo-upload-button"
+                >
+
+                    <i class="bi bi-camera-fill"></i>
+
+                    Chọn ảnh nhân viên
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="photo-input"
+                    name="photo"
+                    accept=".jpg,.jpeg,.png,.gif,.bmp"
+                    hidden
+                >
+
+
+                <p class="photo-note">
+
+                    JPG, PNG, JPEG, GIF hoặc BMP.
+                    Tối đa 5 MB.
+
+                </p>
+
+
+                <hr>
+
+
+                <div class="form-submit-buttons">
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-floppy-fill"></i>
+
+                        {% if employee %}
+
+                        Lưu thay đổi
+
+                        {% else %}
+
+                        Tạo nhân viên
+
+                        {% endif %}
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('employee.index') }}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        Hủy
+
+                    </a>
+
+
+                </div>
+
+
+            </section>
+
+
+        </aside>
+
+
+    </div>
+
+
+</form>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+
+<script>
+
+
+const photoInput =
+    document.getElementById(
+        "photo-input"
+    );
+
+
+const photoPreview =
+    document.getElementById(
+        "photo-preview"
+    );
+
+
+const placeholder =
+    document.getElementById(
+        "photo-placeholder"
+    );
+
+
+photoInput.addEventListener(
+    "change",
+    function ()
+    {
+
+        const file =
+            this.files[0];
+
+
+        if (!file)
+        {
+            return;
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function (event)
+            {
+
+                photoPreview.src =
+                    event.target.result;
+
+
+                photoPreview.style.display =
+                    "block";
+
+
+                if (placeholder)
+                {
+
+                    placeholder.style.display =
+                        "none";
+
+                }
+
+            };
+
+
+        reader.readAsDataURL(
+            file
+        );
+
+    }
+);
+
+
+</script>
+
+
+{% endblock %}

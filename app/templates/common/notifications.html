@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+
+{% block title %}
+Thông báo - WorkFlow VIP
+{% endblock %}
+
+{% block page_title %}
+THÔNG BÁO HỆ THỐNG
+{% endblock %}
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            NOTIFICATION CENTER
+        </span>
+
+        <h3>
+            Trung tâm thông báo
+        </h3>
+
+        <p>
+            Theo dõi các thông báo mới từ hệ thống và quản trị viên.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% if current_user.role == "admin" %}
+
+<div class="content-card notification-create-table-card">
+
+    <div class="table-card-header">
+
+        <div>
+
+            <strong>
+                Tạo thông báo mới
+            </strong>
+
+            <span>
+                Gửi thông báo tới người dùng trong hệ thống.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <form
+        method="post"
+        class="notification-table-form"
+    >
+
+        <div>
+
+            <label class="form-label">
+                Đối tượng
+            </label>
+
+            <select
+                name="target_role"
+                class="form-select"
+            >
+
+                <option value="all">
+                    Tất cả người dùng
+                </option>
+
+                <option value="employee">
+                    Nhân viên
+                </option>
+
+                <option value="admin">
+                    Admin
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div>
+
+            <label class="form-label">
+                Tiêu đề
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="title"
+                placeholder="Nhập tiêu đề..."
+                required
+            >
+
+        </div>
+
+
+        <div class="notification-message-field">
+
+            <label class="form-label">
+                Nội dung
+            </label>
+
+            <input
+                type="text"
+                class="form-control"
+                name="content"
+                placeholder="Nhập nội dung thông báo..."
+                required
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-send-fill"></i>
+
+            Gửi
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endif %}
+
+
+<div class="content-card">
+
+    <div class="table-card-header">
+
+        <div>
+
+            <strong>
+                Danh sách thông báo
+            </strong>
+
+            <span>
+                Tổng cộng {{ items|length }} thông báo
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table workflow-table notification-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Thông báo</th>
+
+                    <th>Đối tượng</th>
+
+                    <th>Ngày gửi</th>
+
+                    <th>Trạng thái</th>
+
+                    <th class="text-end">
+                        Thao tác
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for item in items %}
+
+                <tr
+                    class="{% if not item.is_read %}notification-row-new{% endif %}"
+                >
+
+                    <td>
+                        {{ loop.index }}
+                    </td>
+
+
+                    <td>
+
+                        <div class="notification-table-content">
+
+                            <div
+                                class="
+                                    notification-table-icon
+                                    {% if item.target_role == 'employee' %}
+                                        notification-table-green
+                                    {% elif item.target_role == 'admin' %}
+                                        notification-table-purple
+                                    {% else %}
+                                        notification-table-blue
+                                    {% endif %}
+                                "
+                            >
+
+                                {% if item.target_role == "employee" %}
+
+                                <i class="bi bi-people-fill"></i>
+
+                                {% elif item.target_role == "admin" %}
+
+                                <i class="bi bi-shield-lock-fill"></i>
+
+                                {% else %}
+
+                                <i class="bi bi-bell-fill"></i>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    {{ item.title }}
+                                </strong>
+
+                                <span>
+                                    {{ item.content }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.target_role == "all" %}
+
+                        <span class="table-badge badge-primary">
+
+                            <i class="bi bi-people-fill"></i>
+
+                            Tất cả
+
+                        </span>
+
+                        {% elif item.target_role == "employee" %}
+
+                        <span class="table-badge badge-success">
+
+                            <i class="bi bi-person-fill"></i>
+
+                            Nhân viên
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="table-badge badge-purple">
+
+                            <i class="bi bi-shield-fill"></i>
+
+                            Admin
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="notification-table-date">
+
+                            <strong>
+
+                                {{
+                                    item.created_at.strftime(
+                                        "%d/%m/%Y"
+                                    )
+                                }}
+
+                            </strong>
+
+                            <span>
+
+                                {{
+                                    item.created_at.strftime(
+                                        "%H:%M"
+                                    )
+                                }}
+
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if item.is_read %}
+
+                        <span class="table-badge badge-secondary">
+
+                            <i class="bi bi-check2-all"></i>
+
+                            Đã đọc
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="table-badge badge-danger">
+
+                            <i class="bi bi-circle-fill"></i>
+
+                            Mới
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td class="text-end">
+
+                        {% if not item.is_read %}
+
+                        <form
+                            method="post"
+                            action="{{ url_for('dashboard.mark_notification_read', notification_id=item.id) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-success btn-sm"
+                            >
+
+                                <i class="bi bi-check2"></i>
+
+                                Đã đọc
+
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                        <span class="notification-done-icon">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="text-center py-5"
+                    >
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-bell-slash"></i>
+
+                            <h5>
+                                Chưa có thông báo
+                            </h5>
+
+                            <p>
+                                Thông báo mới sẽ xuất hiện tại đây.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

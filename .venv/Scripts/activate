@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\Employee_Task_Scheduler\.venv"
+VIRTUAL_ENV="D:\jj\Employee-Task-Scheduler\.venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

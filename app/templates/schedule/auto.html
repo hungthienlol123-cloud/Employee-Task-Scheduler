@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Phân công tự động - WorkFlow VIP
+{% endblock %}
+
+
+{% block page_title %}
+PHÂN CÔNG TỰ ĐỘNG
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="module-header">
+
+    <div>
+
+        <span class="dashboard-eyebrow">
+            SMART ASSIGNMENT
+        </span>
+
+        <h3>
+            Phân công công việc tự động
+        </h3>
+
+        <p>
+            Hệ thống tự tìm nhân viên phù hợp
+            dựa trên phòng ban và tải công việc.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('schedule.index') }}"
+        class="btn btn-outline-secondary"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Quay lại
+
+    </a>
+
+</div>
+
+
+<div class="auto-assign-layout">
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <form
+        method="post"
+        class="auto-assign-card"
+    >
+
+
+        <div class="auto-assign-icon">
+
+            <i class="bi bi-stars"></i>
+
+        </div>
+
+
+        <h3>
+            Smart Assignment
+        </h3>
+
+
+        <p>
+            Chọn ngày, ca và số nhân viên
+            cần được phân công.
+        </p>
+
+
+        <div class="form-group-workflow">
+
+            <label>
+                Ngày làm việc
+            </label>
+
+            <input
+                type="date"
+                class="form-control"
+                name="work_date"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group-workflow">
+
+            <label>
+                Ca làm
+            </label>
+
+            <select
+                class="form-select"
+                name="shift"
+            >
+
+                <option value="Sáng">
+                    Ca sáng
+                </option>
+
+                <option value="Chiều">
+                    Ca chiều
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group-workflow">
+
+            <label>
+                Số nhân viên cần phân công
+            </label>
+
+            <input
+                type="number"
+                class="form-control"
+                name="limit"
+                min="1"
+                value="5"
+                required
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="btn btn-success w-100 auto-assign-submit"
+        >
+
+            <i class="bi bi-magic"></i>
+
+            Bắt đầu phân công
+
+        </button>
+
+
+    </form>
+
+
+    <!-- =================================================
+         RULES
+    ================================================== -->
+
+    <section class="auto-rule-card">
+
+
+        <span class="dashboard-eyebrow">
+            NGUYÊN TẮC
+        </span>
+
+        <h4>
+            Cách hệ thống lựa chọn
+        </h4>
+
+
+        <div class="auto-rule-list">
+
+
+            <div>
+
+                <span class="auto-rule-number">
+                    01
+                </span>
+
+                <div>
+
+                    <strong>
+                        Kiểm tra trạng thái
+                    </strong>
+
+                    <p>
+                        Chỉ lấy nhân viên
+                        đang hoạt động.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span class="auto-rule-number">
+                    02
+                </span>
+
+                <div>
+
+                    <strong>
+                        Loại nhân viên bận
+                    </strong>
+
+                    <p>
+                        Không chọn người đã có lịch
+                        cùng ngày và cùng ca.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span class="auto-rule-number">
+                    03
+                </span>
+
+                <div>
+
+                    <strong>
+                        Kiểm tra nghỉ phép
+                    </strong>
+
+                    <p>
+                        Người có đơn nghỉ được duyệt
+                        sẽ không được phân công.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span class="auto-rule-number">
+                    04
+                </span>
+
+                <div>
+
+                    <strong>
+                        Cân bằng tải
+                    </strong>
+
+                    <p>
+                        Nhân viên có ít công việc
+                        được ưu tiên trước.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span class="auto-rule-number">
+                    05
+                </span>
+
+                <div>
+
+                    <strong>
+                        Đúng chuyên môn
+                    </strong>
+
+                    <p>
+                        Ưu tiên công việc
+                        trùng phòng ban.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+<!-- =====================================================
+     RESULT
+===================================================== -->
+
+{% if assigned is not none %}
+
+
+<div class="auto-result-card">
+
+
+    <div class="auto-result-header">
+
+
+        <div>
+
+            <span class="dashboard-eyebrow">
+                KẾT QUẢ
+            </span>
+
+            <h4>
+                Phân công hoàn tất
+            </h4>
+
+        </div>
+
+
+        <span class="auto-result-count">
+
+            {{ assigned|length }}
+            nhân viên
+
+        </span>
+
+
+    </div>
+
+
+    {% if assigned %}
+
+
+    <div class="auto-result-list">
+
+
+        {% for employee_name, task_name in assigned %}
+
+
+        <div class="auto-result-row">
+
+
+            <div class="auto-result-avatar">
+
+                {{
+                    employee_name[:2]
+                    | upper
+                }}
+
+            </div>
+
+
+            <div class="auto-result-person">
+
+                <strong>
+                    {{ employee_name }}
+                </strong>
+
+                <span>
+                    được phân công
+                </span>
+
+            </div>
+
+
+            <i class="bi bi-arrow-right"></i>
+
+
+            <div class="auto-result-task">
+
+                <i class="bi bi-check2-square"></i>
+
+                {{ task_name }}
+
+            </div>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="empty-state">
+
+        <i class="bi bi-person-x"></i>
+
+        <h5>
+            Không có nhân viên phù hợp
+        </h5>
+
+        <p>
+            Có thể tất cả nhân viên đã có lịch
+            hoặc đang nghỉ phép.
+        </p>
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+{% endif %}
+
+
+{% endblock %}
